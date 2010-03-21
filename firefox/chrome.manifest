@@ -1,0 +1,4 @@
+resource keysharky ./
+content	keysharky	content/
+skin keysharky skin skin/
+overlay	chrome://browser/content/browser.xul	chrome://keysharky/content/firefoxOverlay.xul

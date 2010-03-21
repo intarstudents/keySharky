@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<RDF:RDF xmlns:em="http://www.mozilla.org/2004/em-rdf#"
+         xmlns:NC="http://home.netscape.com/NC-rdf#"
+         xmlns:RDF="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+  <RDF:Description RDF:about="rdf:#$kLx0i3"
+                   em:id="{ec8030f7-c20a-464f-9b0e-13a3a9e97384}"
+                   em:minVersion="3.0"
+                   em:maxVersion="3.6.*" />
+  <RDF:Description RDF:about="urn:mozilla:install-manifest"
+                   em:id="keysharky@intars.students"
+                   em:name="keySharky"
+                   em:description="Add missing keyboard functionality to Grooveshark!"
+                   em:version="1.3"
+                   em:creator="Intars Students"
+                   em:optionsURL="chrome://keysharky/content/options.xul"
+                   em:iconURL="chrome://keysharky/skin/grooveshark-logo.png">
+    <em:targetApplication RDF:resource="rdf:#$kLx0i3"/>
+  </RDF:Description>
+</RDF:RDF>

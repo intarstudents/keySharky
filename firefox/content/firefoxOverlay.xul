@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<overlay id="keysharky-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+  
+  <script src="overlay.js"/>
+  
+  <keyset id="mainKeyset">
+    <key id="keysharky_key_fake" />
+    <!-- DO NOT REMOVE THIS FAKE KEY, OK? -->
+  </keyset>
+  
+  <commandset id="mainCommandSet">
+    <command id="keysharky_cmd_play"      oncommand="keysharky.toggle('play');" />
+    <command id="keysharky_cmd_stop"      oncommand="keysharky.toggle('stop');" />
+    <command id="keysharky_cmd_previous"  oncommand="keysharky.toggle('previous');" />
+    <command id="keysharky_cmd_next"      oncommand="keysharky.toggle('next');" />
+    
+    <command id="keysharky_cmd_favorite"  oncommand="keysharky.toggle('favorite');" />
+    <command id="keysharky_cmd_voteup"    oncommand="keysharky.toggle('voteup');" />
+    <command id="keysharky_cmd_voteclear" oncommand="keysharky.toggle('voteclear');" />
+    <command id="keysharky_cmd_votedown"  oncommand="keysharky.toggle('votedown');" />
+  </commandset>
+
+</overlay>

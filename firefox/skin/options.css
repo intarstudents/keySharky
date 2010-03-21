@@ -1,0 +1,25 @@
+#keysharky_readme {
+  background-color: #AE0000; 
+  color: #fff; 
+  cursor: pointer; 
+  font-size: 10px; 
+  margin-top: 7px;
+  line-height: 16px;
+  padding-left: 2px;
+  padding-right: 2px; 
+  text-align: center;
+  width: 400px;
+  
+  -moz-border-radius: 2px;
+}
+
+#keysharky-toggle-play-shortcut,
+#keysharky-toggle-stop-shortcut,
+#keysharky-toggle-previous-shortcut,
+#keysharky-toggle-next-shortcut,
+#keysharky-toggle-favorite-shortcut,
+#keysharky-toggle-voteup-shortcut,
+#keysharky-toggle-voteclear-shortcut,
+#keysharky-toggle-votedown-shortcut {
+  width: 250px;
+}
