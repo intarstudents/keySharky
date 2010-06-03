@@ -53,14 +53,37 @@ var keysharky = {
     this.consoleObject = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
     
     this.gsliteswf  = undefined;
+    this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = false;
+    this.debug      = true;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
     this.loadCombos();
+    this.experementalHTTPd();
     
     this.log("ready to groove");
+  },
+  
+  experementalHTTPd: function(){
+    this.gsAPI = new nsHttpServer();
+    
+    this.gsAPI.registerPathHandler("/writeString", this.writeString);
+    this.gsAPI.start(4433);
+    
+    this.log("experementalHTTPd loaded!");
+  },
+  
+  unload: function(){
+    try {
+      this.log("stoping gsAPI server");
+      this.gsAPI.stop(function(){});
+      this.log("stoped!");
+    }catch(e){}
+  },
+  
+  writeString: function(metadata, response){
+    response.write("1234");
   },
   
   // Debugging is half of victory!
@@ -236,9 +259,9 @@ var keysharky = {
       }else{
         str += " + " + (json_arr[i]["key"] == " " ? "SPACE" : json_arr[i]["key"]);
       }
-      
-      if (document.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut")){
-        document.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut").value = str;
+      this.log(keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut"));
+      if (keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut")){
+        keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut").value = str;
       }
     }
   },
@@ -428,3 +451,4 @@ var keysharky = {
 };
 
 window.addEventListener("load", function(e) { keysharky.init(e); }, false);
+window.addEventListener("unload", function(e) { keysharky.unload(e); }, false);
