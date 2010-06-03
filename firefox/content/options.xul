@@ -4,7 +4,16 @@
 <window id="keysharky-options" title="keySharky Options"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   
-  <script src="chrome://keysharky/content/overlay.js"/>
+  <script type="text/javascript">
+    // Creating link between keysharky object in main window and option window
+    
+    var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"]
+                   .getService(Components.interfaces.nsIWindowMediator);
+    var mainWindow = wm.getMostRecentWindow("navigator:browser");
+    
+    var keysharky = mainWindow.keysharky;
+    keysharky.optionsDoc = document;
+  </script>
   
   <vbox width="400">
     <groupbox>
