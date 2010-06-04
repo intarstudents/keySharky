@@ -77,6 +77,30 @@
       </hbox>
     </groupbox>
     
+    <groupbox>
+      <caption label="API server"/>
+      
+      <hbox align="center">
+        <label control="keysharky-toggle-port" value="Port"/>
+        <textbox 
+          id="keysharky-toggle-port" 
+          value="8800" 
+          max="65535" 
+          min="1024" 
+          maxLength="5" 
+          size="5" 
+          type="number" />
+        <spacer flex="1"/>
+        <checkbox label="Start with Firefox" checked="false"/>
+      </hbox>
+      
+      <hbox align="center">
+        <spacer flex="1"/>
+        <button id="keysharky-toggleServer" oncommand="" label="Start" />
+        <spacer flex="1"/>
+      </hbox>
+    </groupbox>
+    
     <hbox align="center">
       <spacer flex="1"/><description id="keysharky_readme" onclick="keysharky.readme()">With great power comes great responsibility. Read before do.</description><spacer flex="1"/>
     </hbox>
