@@ -69,6 +69,12 @@ var keysharky = {
     this.log("ready to groove");
   },
   
+  // What must happen when unload accrue
+  unload: function(){
+    this.stopServer();
+  },
+  
+  // Start gsAPI server (on user selected port) and register all handlers for it
   startServer: function(){
     try{
       
@@ -92,6 +98,7 @@ var keysharky = {
     }
   },
   
+  // Stop gsAPI server and unset gsAPI object
   stopServer: function(){
     try {
       this.gsAPI.stop(function(){});
@@ -105,6 +112,7 @@ var keysharky = {
     }
   },
   
+  // Parse and execute successful methods of gsAPI
   serverParser: function(request, response){
     var toggle = /\/(\w+)/i.exec(request.path);
     response.setHeader("Cache-Control", "no-cache", false);
@@ -118,13 +126,13 @@ var keysharky = {
     }
   },
   
+  // If user wants to break gsAPI, give him "No-no" message
   serverErrorParser: function(request, response){
     response.setStatusLine("1.1", 501, "Not implemented");
     response.write(
       "<h2>Not implemented</h2>" +
-      "<p style=\"width: 240px;\"><code>You tried to run method that doesn't exist in this API. " + 
-      "Please read wiki entry, about what you can do here or if you think this " + 
-      "is bug, email the.mobix@gmail.com</code></p>" +
+      "<p style=\"width: 240px;\"><code>You tried to run method that doesn't exist in this API.<br />" + 
+      "Please read wiki entry, about what you can do with this API :)</code></p>"
       "<p><a href=\"http://wiki.github.com/intarstudents/keySharky/api-server\"><code>API server</code></a></p>"
     );
   },
@@ -161,6 +169,7 @@ var keysharky = {
     pref.setIntPref("extensions.keysharky.server_port", (port >= 1 && port <= 65535 ? port : this.defaults["server_port"]));
   },
   
+  // Start or Stop gsAPI server with one click
   toggleServer: function(){
     var toggleButton = this.optionsDoc.getElementById("keysharky-toggleServer");
     var toggleServerPort = this.optionsDoc.getElementById("keysharky-toggleServerPort");
@@ -206,17 +215,15 @@ var keysharky = {
     }
   },
   
+  // Change gsAPI server autostart option
   toggleServerStartup: function(){
     var toggleServerStartup = this.optionsDoc.getElementById("keysharky-toggleServerStartup");
     this.set_server_autostart(toggleServerStartup.getAttribute("checked"));
   },
   
+  // Change gsAPI server port
   toggleServerPort: function(){
     this.set_server_port(this.optionsDoc.getElementById("keysharky-toggleServerPort").value);
-  },
-  
-  unload: function(){
-    this.stopServer();
   },
   
   // Debugging is half of victory!
