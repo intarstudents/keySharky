@@ -39,15 +39,17 @@ var keysharky = {
     };
     
     this.defaults = {
-      "play"      :  '{"modifiers":["control","alt","shift"],"key":"Z","keycode":""}',
-      "stop"      :  '{"modifiers":["control","alt","shift"],"key":"X","keycode":""}',
-      "previous"  :  '{"modifiers":["control","alt","shift"],"key":"A","keycode":""}',
-      "next"      :  '{"modifiers":["control","alt","shift"],"key":"D","keycode":""}',
+      "play"        :  '{"modifiers":["control","alt","shift"],"key":"Z","keycode":""}',
+      "stop"        :  '{"modifiers":["control","alt","shift"],"key":"X","keycode":""}',
+      "previous"    :  '{"modifiers":["control","alt","shift"],"key":"A","keycode":""}',
+      "next"        :  '{"modifiers":["control","alt","shift"],"key":"D","keycode":""}',
       
-      "favorite"  :  '{"modifiers":["control","alt"],"key":"S","keycode":""}',
-      "voteup"    :  '{"modifiers":["control","alt"],"key":"A","keycode":""}',
-      "votedown"  :  '{"modifiers":["control","alt"],"key":"Z","keycode":""}',
-      "voteclear" :  '{"modifiers":["control","alt"],"key":"Q","keycode":""}',
+      "favorite"    :  '{"modifiers":["control","alt"],"key":"S","keycode":""}',
+      "voteup"      :  '{"modifiers":["control","alt"],"key":"A","keycode":""}',
+      "votedown"    :  '{"modifiers":["control","alt"],"key":"Z","keycode":""}',
+      "voteclear"   :  '{"modifiers":["control","alt"],"key":"Q","keycode":""}',
+      
+      "server_port" : 8800
     }
     
     this.consoleObject = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
@@ -111,8 +113,20 @@ var keysharky = {
     }
   },
   
+  get_server_autostart: function(){
+    var pref = Components.classes["@mozilla.org/preferences-service;1"]
+               .getService(Components.interfaces.nsIPrefBranch);
+    return pref.getBoolPref("extensions.keysharky.server_autostart");
+  },
+  
+  set_server_autostart: function(s){
+    var pref = Components.classes["@mozilla.org/preferences-service;1"]
+               .getService(Components.interfaces.nsIPrefBranch);
+    pref.setBoolPref("extensions.keysharky.server_autostart", (s ? true : false));
+  },
+  
   toggleServer: function(){
-    var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
+    var toggleButton = this.optionsDoc.getElementById("keysharky-toggleServer");
     toggleButton.setAttribute("disabled", true);
     
     if (toggleButton.getAttribute("label") == "Start"){
@@ -144,6 +158,11 @@ var keysharky = {
       }
       
     }
+  },
+  
+  toggleServerStartup: function(){
+    var toggleServerStartup = this.optionsDoc.getElementById("keysharky-toggleServerStartup");
+    this.set_server_autostart(toggleServerStartup.getAttribute("checked"));
   },
   
   unload: function(){
@@ -294,6 +313,7 @@ var keysharky = {
     this.uiChangeCombos(id_arr, json_arr);
     //keysharky.optionsDoc
     keysharky.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
+    keysharky.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());
     this.log("options UI updated");
   },
   
