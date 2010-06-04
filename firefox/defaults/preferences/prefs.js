@@ -7,3 +7,6 @@ pref('extensions.keysharky.favorite',   '{"modifiers":["control","alt"],"key":"S
 pref('extensions.keysharky.voteup',     '{"modifiers":["control","alt"],"key":"A","keycode":""}');
 pref('extensions.keysharky.votedown',   '{"modifiers":["control","alt"],"key":"Z","keycode":""}');
 pref('extensions.keysharky.voteclear',  '{"modifiers":["control","alt"],"key":"Q","keycode":""}');
+
+pref('extensions.keysharky.server_port',        8800);
+pref('extensions.keysharky.server_autostart',   0);
