@@ -60,30 +60,60 @@ var keysharky = {
     
     this.loadJSON();
     this.loadCombos();
-    this.experementalHTTPd();
+    this.startServer();
+    
+    var toggle = /\/(\w+)/i.exec("/play");
+    if (toggle != null){
+      this.log(toggle[1]);
+    }
     
     this.log("ready to groove");
   },
   
-  experementalHTTPd: function(){
-    this.gsAPI = new nsHttpServer();
+  startServer: function(){
+    try{
+      
+      this.gsAPI = new nsHttpServer();
+      
+      for(var toggle in this.allToggles){
+        this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
+      }
+      
+      this.gsAPI.start(4433);
+      this.log("gsAPI server started");
+      
+    }catch(e){
+      this.log("failed to start gsAPI server");
+    }
+  },
+  
+  stopServer: function(){
+    try {
+      this.gsAPI.stop(function(){});
+      this.gsAPI = undefined;
+      
+      this.log("gsAPI server stopped");
+    }catch(e){
+      this.log("failed to stop gsAPI server (" + e + ")");
+    }
+  },
+  
+  serverParser: function(request, response){
+    var toggle = /\/(\w+)/i.exec(request.path);
     
-    this.gsAPI.registerPathHandler("/writeString", this.writeString);
-    this.gsAPI.start(4433);
-    
-    this.log("experementalHTTPd loaded!");
+    if (toggle != null){
+      
+      if (keysharky.toggle(toggle[1])){
+        response.write("TOGGLING (" + toggle[1] + ") OK");
+      }else{
+        response.write("TOGGLING (" + toggle[1] + ") FAILED");
+      }
+      
+    }
   },
   
   unload: function(){
-    try {
-      this.log("stoping gsAPI server");
-      this.gsAPI.stop(function(){});
-      this.log("stoped!");
-    }catch(e){}
-  },
-  
-  writeString: function(metadata, response){
-    response.write("1234");
+    this.stopServer();
   },
   
   // Debugging is half of victory!
@@ -147,6 +177,7 @@ var keysharky = {
         this.allToggles[s]();
         this.log("toggled '" + s + "'");
         
+        return true;
       }catch(e){
         this.findGrooveshark();
         
@@ -154,8 +185,10 @@ var keysharky = {
           this.allToggles[s]();
           this.log("toggled '" + s + "'");
           
+          return true;
         }catch(e){
           this.log("couldn't toggle '" + s + "'");
+          return false;
         }
       }
     }
