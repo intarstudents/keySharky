@@ -132,7 +132,7 @@ var keysharky = {
     response.write(
       "<h2>Not implemented</h2>" +
       "<p style=\"width: 240px;\"><code>You tried to run method that doesn't exist in this API.<br />" + 
-      "Please read wiki entry, about what you can do with this API :)</code></p>"
+      "Please read wiki entry, about what you can do with this API :)</code></p>" +
       "<p><a href=\"http://wiki.github.com/intarstudents/keySharky/api-server\"><code>API server</code></a></p>"
     );
   },
