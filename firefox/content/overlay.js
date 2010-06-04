@@ -71,10 +71,12 @@ var keysharky = {
   
   startServer: function(){
     try{
-      var port = this.get_server_port();
       
       this.gsAPI = new nsHttpServer();
+      var port = this.get_server_port();
+      
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
+      this.gsAPI.registerPathHandler("/", this.serverErrorParser);
       
       for(var toggle in this.allToggles){
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
