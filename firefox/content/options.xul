@@ -11,10 +11,12 @@
                    .getService(Components.interfaces.nsIWindowMediator);
     var mainWindow = wm.getMostRecentWindow("navigator:browser");
     
+    // Neat, right?
     var keysharky = mainWindow.keysharky;
     keysharky.optionsDoc = document;
   </script>
   
+  <!-- Sadly there isn't oncommand for checkbox object, so ... -->
   <command id="keysharky_cmd_toggleServerStartup"  oncommand="keysharky.toggleServerStartup();" />
   
   <vbox width="400">
