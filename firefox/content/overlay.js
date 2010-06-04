@@ -77,8 +77,10 @@ var keysharky = {
       this.gsAPI.start(4433);
       this.log("gsAPI server started");
       
+      return true;
     }catch(e){
       this.log("failed to start gsAPI server");
+      return false;
     }
   },
   
@@ -88,8 +90,10 @@ var keysharky = {
       this.gsAPI = undefined;
       
       this.log("gsAPI server stopped");
+      return true;
     }catch(e){
       this.log("failed to stop gsAPI server (" + e + ")");
+      return false;
     }
   },
   
@@ -102,6 +106,41 @@ var keysharky = {
         response.write("TOGGLING (" + toggle[1] + ") OK");
       }else{
         response.write("TOGGLING (" + toggle[1] + ") FAILED");
+      }
+      
+    }
+  },
+  
+  toggleServer: function(){
+    var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
+    toggleButton.setAttribute("disabled", true);
+    
+    if (toggleButton.getAttribute("label") == "Start"){
+      if (this.startServer()){
+        toggleButton.setAttribute("label", "Stop");
+        toggleButton.setAttribute("disabled", false);
+      }else{
+        toggleButton.setAttribute("label", "Couldn't start server!");
+        
+        setTimeout(function(){
+          var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
+          toggleButton.setAttribute("label", "Start");
+          toggleButton.setAttribute("disabled", false);
+        }, 3000);
+      }
+      
+    }else{
+      if (this.stopServer()){
+        toggleButton.setAttribute("label", "Start");
+        toggleButton.setAttribute("disabled", false);
+      }else{
+        toggleButton.setAttribute("label", "Couldn't stop server!");
+        
+        setTimeout(function(){
+          var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
+          toggleButton.setAttribute("label", "Stop");
+          toggleButton.setAttribute("disabled", false);
+        }, 3000);
       }
       
     }
@@ -253,6 +292,8 @@ var keysharky = {
     }
     
     this.uiChangeCombos(id_arr, json_arr);
+    //keysharky.optionsDoc
+    keysharky.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
     this.log("options UI updated");
   },
   

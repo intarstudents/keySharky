@@ -96,7 +96,7 @@
       
       <hbox align="center">
         <spacer flex="1"/>
-        <button id="keysharky-toggleServer" oncommand="" label="Start" />
+        <button id="keysharky-toggleServer" oncommand="keysharky.toggleServer();" label="" />
         <spacer flex="1"/>
       </hbox>
     </groupbox>
