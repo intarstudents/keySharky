@@ -62,7 +62,9 @@ var keysharky = {
     
     this.loadJSON();
     this.loadCombos();
-    this.startServer();
+    
+    if (this.get_server_autostart())
+      this.startServer();
     
     this.log("ready to groove");
   },
@@ -123,6 +125,26 @@ var keysharky = {
     var pref = Components.classes["@mozilla.org/preferences-service;1"]
                .getService(Components.interfaces.nsIPrefBranch);
     pref.setBoolPref("extensions.keysharky.server_autostart", (s ? true : false));
+  },
+  
+  get_server_port: function(){
+    var pref = Components.classes["@mozilla.org/preferences-service;1"]
+               .getService(Components.interfaces.nsIPrefBranch);
+    var port = pref.getIntPref("extensions.keysharky.server_port");
+    
+    if (port > 1 && port <= 65535){
+      return port;
+    }else{
+      return this.defaults["server_port"];
+    }
+  },
+  
+  set_server_port: function(s){
+    var pref = Components.classes["@mozilla.org/preferences-service;1"]
+               .getService(Components.interfaces.nsIPrefBranch);
+    var port = parseInt(s);
+    
+    pref.setBoolPref("extensions.keysharky.server_port", (port > 1 && port <= 65535 ? port : this.defaults["server_port"]));
   },
   
   toggleServer: function(){
@@ -311,9 +333,11 @@ var keysharky = {
     }
     
     this.uiChangeCombos(id_arr, json_arr);
-    //keysharky.optionsDoc
-    keysharky.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
-    keysharky.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());
+    
+    this.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
+    this.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());
+    this.optionsDoc.getElementById("keysharky-toggleServerPort").value = this.get_server_port();
+    
     this.log("options UI updated");
   },
   
