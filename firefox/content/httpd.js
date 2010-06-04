@@ -3834,7 +3834,7 @@ Response.prototype =
 
     var headers = this._headers;
     headers.setHeader("Connection", "close", false);
-    headers.setHeader("Server", "httpd.js", false);
+    headers.setHeader("Server", "keySharky", false);
     if (!headers.hasHeader("Date"))
       headers.setHeader("Date", toDateString(Date.now()), false);
 
