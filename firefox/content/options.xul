@@ -83,10 +83,9 @@
       <caption label="API server"/>
       
       <hbox align="center">
-        <label control="keysharky-toggle-port" value="Port"/>
+        <label control="keysharky-toggleServerPort" value="Port"/>
         <textbox 
-          id="keysharky-toggle-port" 
-          value="1" 
+          id="keysharky-toggleServerPort" 
           max="65535" 
           min="1" 
           maxLength="5" 
