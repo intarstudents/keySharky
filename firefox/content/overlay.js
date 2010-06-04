@@ -154,7 +154,7 @@ var keysharky = {
                .getService(Components.interfaces.nsIPrefBranch);
     var port = pref.getIntPref("extensions.keysharky.server_port");
     
-    if (port >= 1 && port <= 65535){
+    if (port >= 1024 && port <= 65535){
       return port;
     }else{
       return this.defaults["server_port"];
@@ -166,7 +166,7 @@ var keysharky = {
                .getService(Components.interfaces.nsIPrefBranch);
     var port = parseInt(s);
     
-    pref.setIntPref("extensions.keysharky.server_port", (port >= 1 && port <= 65535 ? port : this.defaults["server_port"]));
+    pref.setIntPref("extensions.keysharky.server_port", (port >= 1024 && port <= 65535 ? port : this.defaults["server_port"]));
   },
   
   // Start or Stop gsAPI server with one click
@@ -195,23 +195,13 @@ var keysharky = {
       }
       
     }else{
-      if (this.stopServer()){
-        toggleButton.setAttribute("label", "Start");
+      if (!this.stopServer())
+        this.gsAPI = undefined;
         
-        toggleButton.setAttribute("disabled", false);
-        toggleServerPort.removeAttribute("disabled");
-      }else{
-        toggleButton.setAttribute("label", "Couldn't stop server!");
-        
-        setTimeout(function(){
-          var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
-          toggleButton.setAttribute("label", "Stop");
-          
-          toggleButton.setAttribute("disabled", false);
-          toggleServerPort.setAttribute("disabled", true);
-        }, 3000);
-      }
+      toggleButton.setAttribute("label", "Start");
       
+      toggleButton.setAttribute("disabled", false);
+      toggleServerPort.removeAttribute("disabled");
     }
   },
   

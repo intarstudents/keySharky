@@ -90,7 +90,7 @@
           id="keysharky-toggleServerPort" 
           onchange = "keysharky.toggleServerPort();"
           max="65535" 
-          min="1" 
+          min="1024" 
           maxLength="5" 
           size="5" 
           type="number" />
