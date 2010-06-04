@@ -71,15 +71,17 @@ var keysharky = {
   
   startServer: function(){
     try{
+      var port = this.get_server_port();
       
       this.gsAPI = new nsHttpServer();
+      this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       
       for(var toggle in this.allToggles){
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
       }
       
-      this.gsAPI.start(4433);
-      this.log("gsAPI server started");
+      this.gsAPI.start(port);
+      this.log("gsAPI server started (@ http://localhost:" + port + ")");
       
       return true;
     }catch(e){
@@ -103,16 +105,26 @@ var keysharky = {
   
   serverParser: function(request, response){
     var toggle = /\/(\w+)/i.exec(request.path);
+    response.setHeader("Cache-Control", "no-cache", false);
     
-    if (toggle != null){
-      
-      if (keysharky.toggle(toggle[1])){
-        response.write("TOGGLING (" + toggle[1] + ") OK");
-      }else{
-        response.write("TOGGLING (" + toggle[1] + ") FAILED");
-      }
-      
+    if (keysharky.toggle(toggle[1])){
+      response.setStatusLine("1.1", 200, "OK");
+      response.write("TOGGLING (" + toggle[1] + ") OK");
+    }else{
+      response.setStatusLine("1.1", 500, "FAILED");
+      response.write("TOGGLING (" + toggle[1] + ") FAILED");
     }
+  },
+  
+  serverErrorParser: function(request, response){
+    response.setStatusLine("1.1", 501, "Not implemented");
+    response.write(
+      "<h2>Not implemented</h2>" +
+      "<p style=\"width: 240px;\"><code>You tried to run method that doesn't exist in this API. " + 
+      "Please read wiki entry, about what you can do here or if you think this " + 
+      "is bug, email the.mobix@gmail.com</code></p>" +
+      "<p><a href=\"http://wiki.github.com/intarstudents/keySharky/api-server\"><code>API server</code></a></p>"
+    );
   },
   
   get_server_autostart: function(){
@@ -132,7 +144,7 @@ var keysharky = {
                .getService(Components.interfaces.nsIPrefBranch);
     var port = pref.getIntPref("extensions.keysharky.server_port");
     
-    if (port > 1 && port <= 65535){
+    if (port >= 1 && port <= 65535){
       return port;
     }else{
       return this.defaults["server_port"];
@@ -144,38 +156,48 @@ var keysharky = {
                .getService(Components.interfaces.nsIPrefBranch);
     var port = parseInt(s);
     
-    pref.setBoolPref("extensions.keysharky.server_port", (port > 1 && port <= 65535 ? port : this.defaults["server_port"]));
+    pref.setIntPref("extensions.keysharky.server_port", (port >= 1 && port <= 65535 ? port : this.defaults["server_port"]));
   },
   
   toggleServer: function(){
     var toggleButton = this.optionsDoc.getElementById("keysharky-toggleServer");
+    var toggleServerPort = this.optionsDoc.getElementById("keysharky-toggleServerPort");
+    
     toggleButton.setAttribute("disabled", true);
     
     if (toggleButton.getAttribute("label") == "Start"){
       if (this.startServer()){
         toggleButton.setAttribute("label", "Stop");
+        
         toggleButton.setAttribute("disabled", false);
+        toggleServerPort.setAttribute("disabled", true);
       }else{
         toggleButton.setAttribute("label", "Couldn't start server!");
         
         setTimeout(function(){
           var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
           toggleButton.setAttribute("label", "Start");
+          
           toggleButton.setAttribute("disabled", false);
+          toggleServerPort.removeAttribute("disabled");
         }, 3000);
       }
       
     }else{
       if (this.stopServer()){
         toggleButton.setAttribute("label", "Start");
+        
         toggleButton.setAttribute("disabled", false);
+        toggleServerPort.removeAttribute("disabled");
       }else{
         toggleButton.setAttribute("label", "Couldn't stop server!");
         
         setTimeout(function(){
           var toggleButton = keysharky.optionsDoc.getElementById("keysharky-toggleServer");
           toggleButton.setAttribute("label", "Stop");
+          
           toggleButton.setAttribute("disabled", false);
+          toggleServerPort.setAttribute("disabled", true);
         }, 3000);
       }
       
@@ -185,6 +207,10 @@ var keysharky = {
   toggleServerStartup: function(){
     var toggleServerStartup = this.optionsDoc.getElementById("keysharky-toggleServerStartup");
     this.set_server_autostart(toggleServerStartup.getAttribute("checked"));
+  },
+  
+  toggleServerPort: function(){
+    this.set_server_port(this.optionsDoc.getElementById("keysharky-toggleServerPort").value);
   },
   
   unload: function(){
@@ -336,7 +362,12 @@ var keysharky = {
     
     this.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
     this.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());
-    this.optionsDoc.getElementById("keysharky-toggleServerPort").value = this.get_server_port();
+
+    var toggleServerPort = this.optionsDoc.getElementById("keysharky-toggleServerPort");
+    toggleServerPort.value = this.get_server_port();
+    
+    if (this.gsAPI != undefined)
+      toggleServerPort.setAttribute("disabled", true);
     
     this.log("options UI updated");
   },
