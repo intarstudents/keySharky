@@ -86,13 +86,20 @@
         <label control="keysharky-toggleServerPort" value="Port"/>
         <textbox 
           id="keysharky-toggleServerPort" 
+          onchange = "keysharky.toggleServerPort();"
           max="65535" 
           min="1" 
           maxLength="5" 
           size="5" 
           type="number" />
+          
         <spacer flex="1"/>
-        <checkbox id="keysharky-toggleServerStartup" command="keysharky_cmd_toggleServerStartup" label="Start with Firefox" checked="false"/>
+        
+        <checkbox 
+          id="keysharky-toggleServerStartup" 
+          command="keysharky_cmd_toggleServerStartup" 
+          label="Start with Firefox" 
+          checked="false"/>
       </hbox>
       
       <hbox align="center">
@@ -109,6 +116,7 @@
   
   <script type="text/javascript">
     window.addEventListener("load", function(e) { keysharky.uiOptions(e); }, false);
+    window.addEventListener("unload", function(e) { keysharky.toggleServerPort(); }, false);
   </script>
 </window>
 
