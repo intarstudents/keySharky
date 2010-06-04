@@ -62,11 +62,6 @@ var keysharky = {
     this.loadCombos();
     this.startServer();
     
-    var toggle = /\/(\w+)/i.exec("/play");
-    if (toggle != null){
-      this.log(toggle[1]);
-    }
-    
     this.log("ready to groove");
   },
   
@@ -292,7 +287,7 @@ var keysharky = {
       }else{
         str += " + " + (json_arr[i]["key"] == " " ? "SPACE" : json_arr[i]["key"]);
       }
-      this.log(keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut"));
+      
       if (keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut")){
         keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut").value = str;
       }
