@@ -9,4 +9,4 @@ pref('extensions.keysharky.votedown',   '{"modifiers":["control","alt"],"key":"Z
 pref('extensions.keysharky.voteclear',  '{"modifiers":["control","alt"],"key":"Q","keycode":""}');
 
 pref('extensions.keysharky.server_port',        8800);
-pref('extensions.keysharky.server_autostart',   0);
+pref('extensions.keysharky.server_autostart',   true);
