@@ -10,7 +10,7 @@
                    em:id="keysharky@intars.students"
                    em:name="keySharky"
                    em:description="Add missing keyboard functionality to Grooveshark!"
-                   em:version="1.4b"
+                   em:version="1.4"
                    em:creator="Intars Students"
                    em:optionsURL="chrome://keysharky/content/options.xul"
                    em:iconURL="chrome://keysharky/skin/grooveshark-logo.png">
