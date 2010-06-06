@@ -74,7 +74,7 @@ var keysharky = {
     this.stopServer();
   },
   
-  // Start gsAPI server (on user selected port) and register all handlers for it
+  // Start gsAPI server (on users selected port) and register all handlers for it
   startServer: function(){
     try{
       
@@ -127,11 +127,14 @@ var keysharky = {
     }
   },
   
+  // Try to show current song status with gsAPI in simple text format
   serverCurrentSong: function(request, response){
+    
     try {
       var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
     }catch(e){
-    
+      
+      // If no gsliteswf object found, try to search Grooveshark
       try{
         keysharky.findGrooveshark();
         var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
@@ -153,8 +156,6 @@ var keysharky = {
     }catch(e){
       response.setStatusLine("1.1", 500, "FAILED");
       response.write("COULDN'T RETRIEVE CURRENT SONG STATUS");
-      
-      keysharky.log(e);
     }
   },
   
