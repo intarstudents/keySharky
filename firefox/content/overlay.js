@@ -57,7 +57,7 @@ var keysharky = {
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = false;
+    this.debug      = true;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
@@ -83,6 +83,7 @@ var keysharky = {
       
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
+      this.gsAPI.registerPathHandler("/currentSong", this.serverCurrentSong);
       
       for(var toggle in this.allToggles){
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
@@ -123,6 +124,37 @@ var keysharky = {
     }else{
       response.setStatusLine("1.1", 500, "FAILED");
       response.write("TOGGLING (" + toggle[1] + ") FAILED");
+    }
+  },
+  
+  serverCurrentSong: function(request, response){
+    try {
+      var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
+    }catch(e){
+    
+      try{
+        keysharky.findGrooveshark();
+        var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
+      }catch(e){}
+      
+    }
+    
+    response.setHeader("Cache-Control", "no-cache", false);
+    
+    try{
+      var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
+      
+      response.setStatusLine("1.1", 200, "OK");
+      response.write("status: " + currentSong.status + "\n");
+      
+      for(var status in currentSong.song){
+        response.write(status + ": " + currentSong.song[status] + "\n");
+      }
+    }catch(e){
+      response.setStatusLine("1.1", 500, "FAILED");
+      response.write("COULDN'T RETRIEVE CURRENT SONG STATUS");
+      
+      keysharky.log(e);
     }
   },
   
