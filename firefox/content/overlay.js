@@ -102,16 +102,12 @@ var keysharky = {
   
   // Stop gsAPI server and unset gsAPI object
   stopServer: function(){
-    try {
-      this.gsAPI.stop(function(){});
-      this.gsAPI = undefined;
-      
-      this.log("gsAPI server stopped");
-      return true;
-    }catch(e){
-      this.log("failed to stop gsAPI server (" + e + ")");
-      return false;
-    }
+    try{ this.gsAPI.stop(function(){}); }catch(e){}
+    
+    this.gsAPI = undefined;
+    this.log("gsAPI server stopped");
+    
+    return true;
   },
   
   // Parse and execute successful methods of gsAPI
