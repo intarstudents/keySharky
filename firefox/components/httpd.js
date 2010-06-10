@@ -46,6 +46,10 @@
  * httpd.js.
  */
 
+const Cc = Components.classes;
+const Ci = Components.interfaces;
+const Cr = Components.results;
+const Cu = Components.utils;
 const CC = Components.Constructor;
 
 const PR_UINT32_MAX = Math.pow(2, 32) - 1;
@@ -5202,6 +5206,7 @@ const module =
 /** NSGetModule, so this code can be used as a JS component. */
 function NSGetModule(compMgr, fileSpec)
 {
+  //Components.utils.reportError("nsIHttpServer is loading!");
   return module;
 }
 

@@ -57,7 +57,7 @@ var keysharky = {
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = false;
+    this.debug      = true;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
@@ -76,9 +76,10 @@ var keysharky = {
   
   // Start gsAPI server (on users selected port) and register all handlers for it
   startServer: function(){
+    
     try{
-      
-      this.gsAPI = new nsHttpServer();
+      this.gsAPI = Components.classes["@mozilla.org/server/jshttp;1"].
+                  createInstance(Components.interfaces.nsIHttpServer);
       var port = this.get_server_port();
       
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
