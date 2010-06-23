@@ -57,7 +57,7 @@ var keysharky = {
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = false;
+    this.debug      = true;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
