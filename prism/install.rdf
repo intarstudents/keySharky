@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
+    <Description about="urn:mozilla:install-manifest">
+        <em:id>keysharky@intars.students</em:id>
+        <em:version>1.4</em:version>
+        <em:type>2</em:type>
+
+        <!-- Prism -->
+        <em:targetApplication>
+            <Description>
+                <em:id>prism@developer.mozilla.org</em:id>
+                <em:minVersion>0.8</em:minVersion>
+                <em:maxVersion>1.0.0.*</em:maxVersion>
+            </Description>
+        </em:targetApplication>
+        
+        <em:name>keySharky</em:name>
+        <em:description>Add missing keyboard functionality to Grooveshark!</em:description>
+        <em:creator>Intars Students</em:creator>
+        <em:optionsURL>chrome://keysharky/content/options.xul</em:optionsURL>
+        <em:iconURL>chrome://keysharky/skin/grooveshark-logo.png</em:iconURL>
+        <em:homepageURL>http://intarstudents.lv</em:homepageURL>
+    </Description>
+</RDF>
