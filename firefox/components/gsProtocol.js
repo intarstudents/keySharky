@@ -90,6 +90,6 @@ GSModule.canUnload = function(compMgr){
 
 function NSGetModule(compMgr, fileSpec)
 {
-  Components.utils.reportError("GSModule (0.1) is loading!");
+  //Components.utils.reportError("GSModule (0.1) is loading!");
   return GSModule;
 }
