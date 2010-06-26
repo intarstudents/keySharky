@@ -326,15 +326,28 @@ var keysharky = {
   
   // Searching for Grooveshark tab
   findGrooveshark: function(){
+    
+    var mTabs = Array();
     this.log("searching for Grooveshark tab ...");
+    
+    if (typeof(gBrowser) != "undefined"){
+    
+      // Looks like Firefox to me
+      mTabs = gBrowser.mTabs;
+      
+    }else if (typeof(WebRunner) != "undefined"){
+    
+      // Looks like Prisma to me
+      mTabs[0] = WebRunner._getBrowser();
+      
+    }
     
     try{
       
-      var mTabs = gBrowser.mTabs;
       delete this.gsliteswf;
       
       for (var i=0; i<mTabs.length; i++){
-        var browser = gBrowser.getBrowserForTab(mTabs[i]);
+        var browser = typeof(mTabs[i].loadURI) == "function" ? mTabs[i] : gBrowser.getBrowserForTab(mTabs[i]);
         
         /*
           Search for tab with URL like:
