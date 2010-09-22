@@ -1,3 +1,7 @@
+component {54ef6f81-30af-4b1d-ac55-8ba811293e41} httpd/httpd.js
+contract @mozilla.org/server/jshttp;1 {54ef6f81-30af-4b1d-ac55-8ba811293e41}
+interfaces httpd/nsIHttpServer.xpt
+
 resource keysharky ./
 content	keysharky	content/
 skin keysharky skin skin/

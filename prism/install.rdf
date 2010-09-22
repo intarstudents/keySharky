@@ -2,7 +2,7 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
     <Description about="urn:mozilla:install-manifest">
         <em:id>keysharky@intars.students</em:id>
-        <em:version>1.4</em:version>
+        <em:version>1.5b1</em:version>
         <em:type>2</em:type>
 
         <!-- Prism -->
@@ -19,6 +19,6 @@
         <em:creator>Intars Students</em:creator>
         <em:optionsURL>chrome://keysharky/content/options.xul</em:optionsURL>
         <em:iconURL>chrome://keysharky/skin/grooveshark-logo.png</em:iconURL>
-        <em:homepageURL>http://intarstudents.lv</em:homepageURL>
+        <em:homepageURL>http://github.com/intarstudents/keySharky/wiki</em:homepageURL>
     </Description>
 </RDF>

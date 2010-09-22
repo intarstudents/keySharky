@@ -53,6 +53,7 @@ var keysharky = {
     }
     
     this.consoleObject = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
+    this.environment = typeof(WebRunner) != "undefined" ? "prism" : "firefox";
     
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
@@ -61,7 +62,10 @@ var keysharky = {
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
-    this.loadCombos();
+    
+    // No need of keyboard shortcuts in Prism
+    if (this.enviroment != "prism")
+      this.loadCombos();
     
     if (this.get_server_autostart())
       this.startServer();
@@ -76,8 +80,8 @@ var keysharky = {
   
   // Start gsAPI server (on users selected port) and register all handlers for it
   startServer: function(){
-    
     try{
+    
       this.gsAPI = Components.classes["@mozilla.org/server/jshttp;1"].
                   createInstance(Components.interfaces.nsIHttpServer);
       var port = this.get_server_port();
@@ -94,9 +98,12 @@ var keysharky = {
       this.log("gsAPI server started (@ http://localhost:" + port + ")");
       
       return true;
+      
     }catch(e){
+    
       this.log("failed to start gsAPI server");
       return false;
+      
     }
   },
   
@@ -309,6 +316,7 @@ var keysharky = {
         
         return true;
       }catch(e){
+        this.log(e);
         this.findGrooveshark();
         
         try{
@@ -317,6 +325,7 @@ var keysharky = {
           
           return true;
         }catch(e){
+          this.log(e);
           this.log("couldn't toggle '" + s + "'");
           return false;
         }
@@ -330,16 +339,10 @@ var keysharky = {
     var mTabs = Array();
     this.log("searching for Grooveshark tab ...");
     
-    if (typeof(gBrowser) != "undefined"){
-    
-      // Looks like Firefox to me
-      mTabs = gBrowser.mTabs;
-      
-    }else if (typeof(WebRunner) != "undefined"){
-    
-      // Looks like Prisma to me
+    if (this.environment == "prism"){
       mTabs[0] = WebRunner._getBrowser();
-      
+    }else{
+      mTabs = gBrowser.mTabs;
     }
     
     try{
@@ -389,18 +392,28 @@ var keysharky = {
   
   // Update Options UI
   uiOptions: function(){
-    var id_arr    = Array();
-    var json_arr  = Array();
-    var i         = 0;
-    
-    for(var toggle in this.allToggles){
-      id_arr[i]   = toggle;
-      json_arr[i] = this.getPref(toggle);
+    if (this.environment == "firefox"){
       
-      i++;
-    }
+      var id_arr    = Array();
+      var json_arr  = Array();
+      var i         = 0;
+      
+      for(var toggle in this.allToggles){
+        id_arr[i]   = toggle;
+        json_arr[i] = this.getPref(toggle);
+        
+        i++;
+      }
+      
+      this.uiChangeCombos(id_arr, json_arr);
+      
+    }else if (this.environment == "prism"){
     
-    this.uiChangeCombos(id_arr, json_arr);
+      this.optionsDoc.getElementById("keysharky-group-playback").style.display = "none";
+      this.optionsDoc.getElementById("keysharky-group-current").style.display = "none";
+      this.optionsDoc.getElementById("keysharky-group-readme").style.display = "none";
+      
+    }
     
     this.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
     this.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());

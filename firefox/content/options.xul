@@ -20,7 +20,7 @@
   <command id="keysharky_cmd_toggleServerStartup"  oncommand="keysharky.toggleServerStartup();" />
   
   <vbox width="400">
-    <groupbox>
+    <groupbox id="keysharky-group-playback">
       <caption label="Playback control"/>
       
       <hbox align="center">
@@ -49,7 +49,7 @@
       </hbox>
     </groupbox>
     
-    <groupbox>
+    <groupbox id="keysharky-group-current">
       <caption label="Current song"/>
       
       <hbox align="center">
@@ -81,7 +81,7 @@
       </hbox>
     </groupbox>
     
-    <groupbox>
+    <groupbox id="keysharky-group-api-server">
       <caption label="API server"/>
       
       <hbox align="center">
@@ -111,7 +111,7 @@
       </hbox>
     </groupbox>
     
-    <hbox align="center">
+    <hbox align="center" id="keysharky-group-readme">
       <spacer flex="1"/><description id="keysharky_readme" onclick="keysharky.readme()">With great power comes great responsibility. Read before do.</description><spacer flex="1"/>
     </hbox>
   </vbox>
