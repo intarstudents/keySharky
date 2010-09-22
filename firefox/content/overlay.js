@@ -27,15 +27,15 @@ var keysharky = {
   // Init keySharky object
   init: function() {
     this.allToggles = {
-      "play"      : function(){ keysharky.gsliteswf.togglePlayback(); },
-      "stop"      : function(){ keysharky.gsliteswf.pausePlayback(); },
+      "play"      : function(){ keysharky.gsliteswf.togglePlayPause(); },
+      "stop"      : function(){ keysharky.gsliteswf.pause(); },
       "previous"  : function(){ keysharky.gsliteswf.previous(); },
       "next"      : function(){ keysharky.gsliteswf.next(); },
       
-      "favorite"  : function(){ keysharky.gsliteswf.favoriteSong(); },
-      "voteup"    : function(){ keysharky.gsliteswf.voteSong(1); },
-      "votedown"  : function(){ keysharky.gsliteswf.voteSong(-1); },
-      "voteclear" : function(){ keysharky.gsliteswf.voteSong(0); },
+      "favorite"  : function(){ keysharky.gsliteswf.favoriteCurrentSong(); },
+      "voteup"    : function(){ keysharky.gsliteswf.voteCurrentSong(1); },
+      "votedown"  : function(){ keysharky.gsliteswf.voteCurrentSong(-1); },
+      "voteclear" : function(){ keysharky.gsliteswf.voteCurrentSong(0); },
     };
     
     this.defaults = {
@@ -359,10 +359,10 @@ var keysharky = {
             http://staging.grooveshark.com/
         */
         if (browser.currentURI["spec"].search(/^http\:\/\/(listen|preview|staging)\.grooveshark\.com/) != -1){
-          if (browser.contentDocument.getElementById("gsliteswf").wrappedJSObject != undefined){
+          if (browser.contentWindow.wrappedJSObject.Grooveshark != undefined){
             
             this.log("found Grooveshark");
-            this.gsliteswf = browser.contentDocument.getElementById("gsliteswf").wrappedJSObject;
+            this.gsliteswf = browser.contentWindow.wrappedJSObject.Grooveshark;
             this.gsTab = mTabs[i];
             
             break;
