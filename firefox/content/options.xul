@@ -24,25 +24,25 @@
       <caption label="Playback control"/>
       
       <hbox align="center">
-        <label control="keysharky-toggle-play-shortcut" value="Play/Pause"/>
+        <checkbox onclick="keysharky.toggleCombo('play');" id="keysharky-enabler-play" class="enabler" label="Play/Pause" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-play-shortcut" value="-" 
                  onkeypress="keysharky.applyCombo(event, 'play')" readonly="true" />
       </hbox>
       <hbox align="center">
-        <label control="keysharky-toggle-stop-shortcut" value="Stop"/>
+        <checkbox onclick="keysharky.toggleCombo('stop');" id="keysharky-enabler-stop" class="enabler" label="Stop" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-stop-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'stop')" readonly="true" />
       </hbox>
       <hbox align="center">
-        <label control="keysharky-toggle-previous-shortcut" value="Previous song"/>
+        <checkbox onclick="keysharky.toggleCombo('previous');" id="keysharky-enabler-previous" class="enabler" label="Previous song" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-previous-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'previous')" readonly="true" />
       </hbox>
       <hbox align="center">
-        <label control="keysharky-toggle-next-shortcut" value="Next song"/>
+        <checkbox onclick="keysharky.toggleCombo('next');" id="keysharky-enabler-next" class="enabler" label="Next song" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-next-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'next')" readonly="true" />
@@ -53,28 +53,28 @@
       <caption label="Current song"/>
       
       <hbox align="center">
-        <label control="keysharky-toggle-favorite-shortcut" value="Favorite"/>
+        <checkbox onclick="keysharky.toggleCombo('favorite');" id="keysharky-enabler-favorite" class="enabler" label="Favorite" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-favorite-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'favorite')" readonly="true" />
       </hbox>
       
       <hbox align="center">
-        <label control="keysharky-toggle-voteup-shortcut" value="Vote up :)"/>
+        <checkbox onclick="keysharky.toggleCombo('voteup');" id="keysharky-enabler-voteup" class="enabler" label="Vote up :)" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-voteup-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'voteup')" readonly="true" />
       </hbox>
       
       <hbox align="center">
-        <label control="keysharky-toggle-votedown-shortcut" value="Vote down :("/>
+        <checkbox onclick="keysharky.toggleCombo('votedown');" id="keysharky-enabler-votedown" class="enabler" label="Vote down :(" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-votedown-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'votedown')" readonly="true" />
       </hbox>
       
       <hbox align="center">
-        <label control="keysharky-toggle-voteclear-shortcut" value="Reset vote"/>
+        <checkbox onclick="keysharky.toggleCombo('voteclear');" id="keysharky-enabler-voteclear" class="enabler" label="Reset vote" />
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-voteclear-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'voteclear')" readonly="true" />

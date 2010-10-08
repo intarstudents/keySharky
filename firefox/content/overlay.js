@@ -462,20 +462,41 @@ var keysharky = {
       if (keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut")){
         keysharky.optionsDoc.getElementById("keysharky-toggle-" + id_arr[i] + "-shortcut").value = str;
       }
+      
+      if (keysharky.optionsDoc.getElementById("keysharky-enabler-" + id_arr[i]) && json_arr[i]["enabled"]){
+        keysharky.optionsDoc.getElementById("keysharky-enabler-" + id_arr[i]).setAttribute("checked", json_arr[i]["enabled"]);
+      }
     }
   },
 	
 	// Apply just selected keyboard shortcut, so user can test it out
   applyCombo: function(event, id){
     if (id){
-      combo = this.recognizeKeys(event);
+      var old_combo = this.getPref(id);
+      var combo = this.recognizeKeys(event);
+      
       // If bad combo, let user try new cambo
       if (!this.checkJSON(combo))
         return;
       
+      combo["enabled"] = old_combo["enabled"];
+      
       this.uiChangeCombos(id, combo);
       this.setPref(id, combo);
       this.setCombos(id, combo);
+    }
+  },
+  
+  toggleCombo: function(id){
+    if (this.allToggles[id] != undefined){
+      var checkbox = keysharky.optionsDoc.getElementById("keysharky-enabler-" + id);
+      var checked = checkbox.getAttribute("checked") ? false : true;
+      
+      var json = this.getPref(id);
+      json["enabled"] = checked;
+      
+      this.setPref(id, json);
+      this.setCombos(id, json);
     }
   },
   
@@ -519,35 +540,44 @@ var keysharky = {
         if (!this.allToggles[id_arr[i]])
           continue;
         
-        // Create new key element
-        var newKey = win.document.createElement("key");
-        newKey.setAttribute("id", "keysharky_key_" + id_arr[i]);
-        newKey.setAttribute("command", "keysharky_cmd_" + id_arr[i]);
-        newKey.setAttribute("modifiers", json_arr[i]["modifiers"].join(" "));
-        newKey.setAttribute(
-          (json_arr[i]["keycode"] ? "keycode" : "key"), 
-          (json_arr[i]["keycode"] ? json_arr[i]["keycode"] : json_arr[i]["key"])
-        );
+        
+        this.log(i + " key is " + json_arr[i]["enabled"]);
+        
+        if (json_arr[i]["enabled"]){
+          // Create new key element
+          var newKey = win.document.createElement("key");
+          newKey.setAttribute("id", "keysharky_key_" + id_arr[i]);
+          newKey.setAttribute("command", "keysharky_cmd_" + id_arr[i]);
+          newKey.setAttribute("modifiers", json_arr[i]["modifiers"].join(" "));
+          newKey.setAttribute(
+            (json_arr[i]["keycode"] ? "keycode" : "key"), 
+            (json_arr[i]["keycode"] ? json_arr[i]["keycode"] : json_arr[i]["key"])
+          );
+        }
         
         // Delete exciting key for this ID
         for(var x=0; x<keySet.childNodes.length; x++){
           if (keySet.childNodes[x].getAttribute("id") == "keysharky_key_" + id_arr[i]){
             try{
+              this.log(i + " removal!");
               keySet.removeChild(keySet.childNodes[x]);
             }catch(e){}
             break;
           }
         }
         
+        
         // And at last append it to cloned object
-        keySet.appendChild(newKey);
+        if (json_arr[i]["enabled"]){
+          keySet.appendChild(newKey);
+        }
       }
       
       // When every key is appended, refresh mainKeyset (by deleting it and appending from clone (yes, it's strange))
       keyParent.removeChild(win.document.getElementById("keysharky_key_fake").parentNode);
       keyParent.appendChild(keySet);
       
-      this.log("new key element/s appended to mainKeyset");
+      this.log("mainKeyset updated");
     }
   },
   
@@ -609,6 +639,12 @@ var keysharky = {
         var json = this.JSON.parse(pref.getCharPref("extensions.keysharky." + id));
 	      
 	      if (this.checkJSON(json)){
+	      
+	        // Backward compatibility
+	        if (json["enabled"] == undefined){
+	          json["enabled"] = true;
+	        }
+	        
 	        return json;
 	      }
 	      
