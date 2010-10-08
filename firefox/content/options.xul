@@ -100,7 +100,6 @@
         <checkbox 
           id="keysharky-toggleServerStartup" 
           command="keysharky_cmd_toggleServerStartup" 
-          label="Start with Firefox" 
           checked="false"/>
       </hbox>
       

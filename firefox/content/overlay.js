@@ -316,7 +316,7 @@ var keysharky = {
         
         return true;
       }catch(e){
-        this.log(e);
+        
         this.findGrooveshark();
         
         try{
@@ -325,7 +325,6 @@ var keysharky = {
           
           return true;
         }catch(e){
-          this.log(e);
           this.log("couldn't toggle '" + s + "'");
           return false;
         }
@@ -416,8 +415,10 @@ var keysharky = {
     }
     
     this.optionsDoc.getElementById("keysharky-toggleServer").setAttribute("label", (this.gsAPI == undefined ? "Start" : "Stop"));
+    this.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("label", "Start with " + (this.environment == "prism" ? "Prism" : "Firefox"))
     this.optionsDoc.getElementById("keysharky-toggleServerStartup").setAttribute("checked", this.get_server_autostart());
-
+    
+    
     var toggleServerPort = this.optionsDoc.getElementById("keysharky-toggleServerPort");
     toggleServerPort.value = this.get_server_port();
     
@@ -487,6 +488,7 @@ var keysharky = {
     }
   },
   
+  // Checkbox toogling action
   toggleCombo: function(id){
     if (this.allToggles[id] != undefined){
       var checkbox = keysharky.optionsDoc.getElementById("keysharky-enabler-" + id);
@@ -540,9 +542,6 @@ var keysharky = {
         if (!this.allToggles[id_arr[i]])
           continue;
         
-        
-        this.log(i + " key is " + json_arr[i]["enabled"]);
-        
         if (json_arr[i]["enabled"]){
           // Create new key element
           var newKey = win.document.createElement("key");
@@ -559,16 +558,14 @@ var keysharky = {
         for(var x=0; x<keySet.childNodes.length; x++){
           if (keySet.childNodes[x].getAttribute("id") == "keysharky_key_" + id_arr[i]){
             try{
-              this.log(i + " removal!");
               keySet.removeChild(keySet.childNodes[x]);
             }catch(e){}
             break;
           }
         }
         
-        
-        // And at last append it to cloned object
         if (json_arr[i]["enabled"]){
+          // And at last append it to cloned object
           keySet.appendChild(newKey);
         }
       }

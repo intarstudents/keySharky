@@ -1,5 +1,6 @@
 #keysharky_readme {
-  background-color: #AE0000; 
+  background: #AE0000; 
+  background: -moz-linear-gradient(top, #a90329 0%, #8f0222 44%, #6d0019 100%);
   color: #fff; 
   cursor: pointer; 
   font-size: 10px; 
