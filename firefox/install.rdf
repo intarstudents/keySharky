@@ -13,7 +13,7 @@
                    em:version="1.5b2"
                    em:creator="Intars Students"
                    em:optionsURL="chrome://keysharky/content/options.xul"
-                   em:iconURL="chrome://keysharky/skin/grooveshark-logo.png">
+                   em:iconURL="chrome://keysharky/skin/keysharky.png">
     <em:targetApplication RDF:resource="rdf:#$kLx0i3"/>
   </RDF:Description>
 </RDF:RDF>
