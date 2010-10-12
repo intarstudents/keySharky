@@ -58,7 +58,7 @@ var keysharky = {
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = true;
+    this.debug      = false;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
     
     this.loadJSON();
@@ -89,6 +89,7 @@ var keysharky = {
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
       this.gsAPI.registerPathHandler("/currentSong", this.serverCurrentSong);
+      this.gsAPI.registerPathHandler("/gsVersion", this.serverGroovesharkVersion);
       
       for(var toggle in this.allToggles){
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
@@ -115,6 +116,37 @@ var keysharky = {
     this.log("gsAPI server stopped");
     
     return true;
+  },
+  
+  // Retrieves info about Groovesharks version
+  serverGroovesharkVersion: function(request, response){
+
+    try {
+      var version = keysharky.gsliteswf.getApplicationVersion();
+    }catch(e){
+      
+      // If no gsliteswf object found, try to search Grooveshark
+      try{
+        
+        keysharky.findGrooveshark();
+        var version = keysharky.gsliteswf.getApplicationVersion();
+        
+      }catch(e){}
+      
+    }
+    
+    if (version){
+    
+      response.setStatusLine("1.1", 200, "OK");
+      response.write(version);
+      
+    }else{
+    
+      response.setStatusLine("1.1", 500, "FAILED");
+      response.write("COULDN'T RETRIEVE GROOVESHARK VERSION");
+      
+    }
+
   },
   
   // Parse and execute successful methods of gsAPI
@@ -166,12 +198,35 @@ var keysharky = {
   // If user wants to break gsAPI, give him "No-no" message
   serverErrorParser: function(request, response){
     response.setStatusLine("1.1", 501, "Not implemented");
-    response.write(
-      "<h2>Not implemented</h2>" +
-      "<p style=\"width: 240px;\"><code>You tried to run method that doesn't exist in this API.<br />" + 
-      "Please read wiki entry, about what you can do with this API :)</code></p>" +
-      "<p><a href=\"http://wiki.github.com/intarstudents/keySharky/api-server\"><code>API server</code></a></p>"
-    );
+    response.write((<r><![CDATA[
+<html>
+  <head>
+    <title>keySharky &quot;Hi there!&quot;</title>
+  </head>
+  <body>
+    <div style="width: 450px; margin: 20px auto auto;">
+      <h2>Hi there!</h2>
+      
+      <p style="font-family: courier, monospace;">
+        It's sad to tell you this, but your requested method doesn't exicst in API (yet?). 
+        If you are lost, it's possible to find some help by visiting 
+        <a href="http://wiki.github.com/intarstudents/keySharky/api-server">API server</a> documentation page.
+      </p>
+      
+      <p style="font-family: courier, monospace;">
+         <b>K THX BYE</b>
+      </p>
+      
+      <hr />
+      
+      <p style="font-family: courier, monospace; font-size: 70%;">
+        Intars Students<br />
+        <a href="mailto:intars@tldr.lv">intars@tldr.lv</a>
+      </p>
+    </div>
+  </body>
+</html>
+    ]]></r>).toString());
   },
   
   get_server_autostart: function(){
