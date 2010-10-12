@@ -1,27 +1,3 @@
-/*
-
-Copyright (c) 2010 Intars Students
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-
-*/
-
 var keysharky = {
   
   // Init keySharky object
@@ -51,6 +27,12 @@ var keysharky = {
       
       "server_port" : 8800
     }
+    
+    this.serverMethods = {
+      "currentSong"   : function(){ return keysharky.gsliteswf.getCurrentSongStatus(); },
+      "nextSong"      : function(){ return keysharky.gsliteswf.getNextSong(); },
+      "previousSong"  : function(){ return keysharky.gsliteswf.getPreviousSong(); },
+    };
     
     this.consoleObject = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
     this.environment = typeof(WebRunner) != "undefined" ? "prism" : "firefox";
@@ -88,8 +70,11 @@ var keysharky = {
       
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
-      this.gsAPI.registerPathHandler("/currentSong", this.serverCurrentSong);
       this.gsAPI.registerPathHandler("/gsVersion", this.serverGroovesharkVersion);
+      
+      for (var method in this.serverMethods){
+        this.gsAPI.registerPathHandler("/" + method, this.serverSong);
+      }
       
       for(var toggle in this.allToggles){
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
@@ -163,39 +148,50 @@ var keysharky = {
     }
   },
   
-  // Try to show current song status with gsAPI in simple text format
-  serverCurrentSong: function(request, response){
+  // Shows previous/current/next song status in plain text
+  serverSong: function(request, response){
+    var method = /\/(\w+)/i.exec(request.path);
+    var jsonArr = {};
     
     try {
-      var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
+      var json = keysharky.serverMethods[method[1]]();
     }catch(e){
       
       // If no gsliteswf object found, try to search Grooveshark
       try{
         keysharky.findGrooveshark();
-        var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
+        var json = keysharky.serverMethods[method[1]]();
       }catch(e){}
       
     }
     
     response.setHeader("Cache-Control", "no-cache", false);
     
-    try{
-      var currentSong = keysharky.gsliteswf.getCurrentSongStatus();
-      
+    if (json){
       response.setStatusLine("1.1", 200, "OK");
-      response.write("status: " + currentSong.status + "\n");
       
-      for(var status in currentSong.song){
-        response.write(status + ": " + currentSong.song[status] + "\n");
+      if (method[1] == "currentSong"){
+      
+        response.write("status: " + json.status + "\n");
+        jsonArr = json.song;
+        
+      }else{
+      
+        jsonArr = json;
+        
       }
-    }catch(e){
+      
+      for(var status in jsonArr){
+        response.write(status + ": " + jsonArr[status] + "\n");
+      }
+    }else{
       response.setStatusLine("1.1", 500, "FAILED");
-      response.write("COULDN'T RETRIEVE CURRENT SONG STATUS");
+      response.write("COULDN'T RETRIEVE SONG STATUS");
     }
+    
   },
   
-  // If user wants to break gsAPI, give him "No-no" message
+  // Not implemented message (or an error)
   serverErrorParser: function(request, response){
     response.setStatusLine("1.1", 501, "Not implemented");
     response.write((<r><![CDATA[
