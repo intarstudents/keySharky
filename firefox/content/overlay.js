@@ -39,15 +39,15 @@ var keysharky = {
     };
     
     this.defaults = {
-      "play"        :  '{"modifiers":["control","alt","shift"],"key":"Z","keycode":""}',
-      "stop"        :  '{"modifiers":["control","alt","shift"],"key":"X","keycode":""}',
-      "previous"    :  '{"modifiers":["control","alt","shift"],"key":"A","keycode":""}',
-      "next"        :  '{"modifiers":["control","alt","shift"],"key":"D","keycode":""}',
+      "play"        :  '{"modifiers":["control","alt","shift"],"key":"Z","keycode":"","enabled":true}',
+      "stop"        :  '{"modifiers":["control","alt","shift"],"key":"X","keycode":"","enabled":true}',
+      "previous"    :  '{"modifiers":["control","alt","shift"],"key":"A","keycode":"","enabled":true}',
+      "next"        :  '{"modifiers":["control","alt","shift"],"key":"D","keycode":"","enabled":true}',
       
-      "favorite"    :  '{"modifiers":["control","alt"],"key":"S","keycode":""}',
-      "voteup"      :  '{"modifiers":["control","alt"],"key":"A","keycode":""}',
-      "votedown"    :  '{"modifiers":["control","alt"],"key":"Z","keycode":""}',
-      "voteclear"   :  '{"modifiers":["control","alt"],"key":"Q","keycode":""}',
+      "favorite"    :  '{"modifiers":["control","alt"],"key":"S","keycode":"","enabled":true}',
+      "voteup"      :  '{"modifiers":["control","alt"],"key":"A","keycode":"","enabled":true}',
+      "votedown"    :  '{"modifiers":["control","alt"],"key":"Z","keycode":"","enabled":true}',
+      "voteclear"   :  '{"modifiers":["control","alt"],"key":"Q","keycode":"","enabled":true}',
       
       "server_port" : 8800
     }
