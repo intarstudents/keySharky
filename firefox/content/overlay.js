@@ -407,8 +407,9 @@ var keysharky = {
             http://listen.grooveshark.com/
             http://preview.grooveshark.com/
             http://staging.grooveshark.com/
+            http://retro.grooveshark.com/
         */
-        if (browser.currentURI["spec"].search(/^http\:\/\/(listen|preview|staging)\.grooveshark\.com/) != -1){
+        if (browser.currentURI["spec"].search(/^http\:\/\/(listen|preview|staging|retro)\.grooveshark\.com/) != -1){
           if (browser.contentWindow.wrappedJSObject.Grooveshark != undefined){
             
             this.log("found Grooveshark");
