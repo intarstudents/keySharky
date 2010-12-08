@@ -3,7 +3,7 @@ var keysharkyListener = {
   // Init keysharkyListener object
   init: function(){
     
-    if (window.location.href.search(/^http\:\/\/(listen|preview|staging)\.grooveshark\.com/) != -1){
+    if (window.location.href.search(/^http\:\/\/(listen|preview|staging|retro)\.grooveshark\.com/) != -1){
       
       try{
         this.gsliteswf = document.getElementById('gsliteswf');

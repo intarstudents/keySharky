@@ -80,7 +80,7 @@
                   chrome.tabs.getAllInWindow(currentWindow.id, function(tabs){
                     for (var i=0; i<tabs.length; i++){
                       
-                      if (tabs[i].url.search(/^http\:\/\/(listen|preview|staging)\.grooveshark\.com/) != -1){
+                      if (tabs[i].url.search(/^http\:\/\/(listen|preview|staging|retro)\.grooveshark\.com/) != -1){
                         keysharky.groovesharkTabID = tabs[i].id;
                         keysharky.log("The groove is found!");
                         
