@@ -104,7 +104,7 @@
           sendResponse({});
         });
         
-        // When tab is removed, check if it was not Grooveshark tab 
+        // When tab is removed, check if it wasn't Grooveshark tab 
         chrome.tabs.onRemoved.addListener(function(tabID){
           if (tabID == keysharky.groovesharkTabID){
             keysharky.log("Grooveshark tab removed!");
@@ -124,7 +124,7 @@
       // Send toggle to Grooveshark tab
       toggle: function(request){
         if (request){
-          chrome.tabs.sendRequest(keysharky.groovesharkTabID, {method : "gsliteswf", action: request}, function(response){
+          chrome.tabs.sendRequest(keysharky.groovesharkTabID, {method : "Grooveshark", action: request}, function(response){
             if (response.result == 200){
               keysharky.log("Toggled '" + request + "' !");
             }else{
