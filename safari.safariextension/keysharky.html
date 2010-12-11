@@ -1,0 +1,167 @@
+<html>
+  <script>
+    var keysharky = {
+      
+      // Init keysharky object
+      init: function(){
+        keysharky.groovesharkTabID = null;
+        keysharky.debug = true;
+        
+        keysharky.defaults = {
+          "play"      : '{"modifiers":["control","alt","shift"],"keycode":90}',
+          "stop"      : '{"modifiers":["control","alt","shift"],"keycode":88}',
+          "prev"      : '{"modifiers":["control","alt","shift"],"keycode":65}',
+          "next"      : '{"modifiers":["control","alt","shift"],"keycode":68}',
+          "favorite"  : '{"modifiers":["control","alt"],"keycode":83}',
+          "voteup"    : '{"modifiers":["control","alt"],"keycode":65}',
+          "votedown"  : '{"modifiers":["control","alt"],"keycode":90}',
+          "voteclear" : '{"modifiers":["control","alt"],"keycode":81}',
+        };
+        
+        safari.application.addEventListener("command", function(event) {
+          if (event.command == "keysharky-options"){
+            
+            var newTab = safari.application.activeBrowserWindow.openTab();
+            newTab.url = safari.extension.baseURI + "options.html";
+            
+          }
+        }, false);
+        
+        safari.application.addEventListener("message", function(request){
+          
+          if (request.name == "keyup"){
+            for(var toggle in keysharky.defaults){
+              if (!localStorage[toggle]){
+                localStorage[toggle] = keysharky.defaults[toggle];
+                keysharky.log("localStorage fix: " + toggle + " reset");
+              }
+            }
+            
+            // Fix for easier porting from Chrome
+            request = request.message;
+            
+            var t = null;
+            var dismatch = null;
+            var action = null;
+            
+            // Is this combo valid? 
+            try{
+              
+              for(var toggle in localStorage){
+                dismatch = false;
+                t = JSON.parse(localStorage[toggle]);
+                
+                if (t["modifiers"].length != request["modifiers"].length)
+                  continue;
+                
+                for(var i in t["modifiers"]){
+                  if (t["modifiers"][i] != request["modifiers"][i]){
+                    dismatch = true;
+                    break;
+                  }
+                }
+                
+                if (dismatch)
+                  continue;
+                  
+                if (t["keycode"] != request["keycode"])
+                  continue;
+                
+                action = toggle;
+              }
+              
+            }catch(e){}
+            
+            if (action){
+              keysharky.log("Toggling '" + action + "' ...");
+              
+              if (keysharky.groovesharkTabID != null){
+                keysharky.toggle(action);
+              }else{
+              
+                keysharky.log("Searching for Grooveshark ...");
+                keysharky.searchGrooveshark();
+                
+                if (keysharky.groovesharkTabID != null){
+                  keysharky.toggle(action);
+                }else{
+                  keysharky.log("Where is groove?!");
+                }
+                
+              }
+            }
+            
+          }
+        },false);
+      },
+      
+      // Find Grooveshark tab
+      searchGrooveshark: function(){
+        
+        keysharky.groovesharkTabID = null;
+        
+        for(var win in safari.application.browserWindows){
+          if (keysharky.groovesharkTabID != null)
+            break;
+                      
+          for(var tab in safari.application.browserWindows[win].tabs){
+            if (keysharky.groovesharkTabID != null)
+              break;
+                      
+            if (keysharky.checkUrl(safari.application.browserWindows[win].tabs[tab].url)){
+                      
+              keysharky.groovesharkTabID = {
+                "win" : win,
+                "tab" : tab
+              };
+                      
+              keysharky.log("The groove is found!");
+                      
+            }
+          }
+        }
+      },
+      
+      // Check if Grooveshark haven't moved an inch
+      checkUrl: function(url){
+        return url.search(/^http\:\/\/(listen|preview|staging|retro)\.grooveshark\.com/) != -1 ? true : false;
+      },
+      
+      // Send toggle to Grooveshark tab
+      toggle: function(action){
+        var url = "";
+        
+        try{
+          url = safari.application.browserWindows[keysharky.groovesharkTabID["win"]].tabs[keysharky.groovesharkTabID["tab"]].url;
+        }catch(e){}
+        
+        if (!keysharky.checkUrl(url)){
+          keysharky.searchGrooveshark();
+        }
+        
+        if (keysharky.groovesharkTabID != null){
+          try{
+          
+            safari.application.browserWindows[keysharky.groovesharkTabID["win"]].
+            tabs[keysharky.groovesharkTabID["tab"]].page.dispatchMessage("Grooveshark", action);
+            
+            keysharky.log("Toggled '" + request + "' !");
+            
+          }catch(e){}
+        }else{
+          keysharky.log("Lost Grooveshark :(");
+        }
+      },
+      
+      // Debugging is half of victory!
+      log: function(msg){
+        if (keysharky.debug && msg){
+          console.log("keysharky ---> " + msg);
+        }
+      },
+      
+    };
+    
+    window.addEventListener("load", function(e) { keysharky.init(e); }, false);
+  </script>
+</html>
