@@ -70,7 +70,8 @@ var keysharky = {
       
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
-      this.gsAPI.registerPathHandler("/gsVersion", this.serverGroovesharkVersion);
+      this.gsAPI.registerPathHandler("/gs-version", this.serverGroovesharkVersion);
+      this.gsAPI.registerPathHandler("/gs-api-version", this.serverGroovesharkAPIVersion);
       
       for (var method in this.serverMethods){
         this.gsAPI.registerPathHandler("/" + method, this.serverSong);
@@ -103,7 +104,36 @@ var keysharky = {
     return true;
   },
   
-  // Retrieves info about Groovesharks version
+  // Retrieves info about GroovesharkAPI version
+  serverGroovesharkAPIVersion: function(request, response){
+    try {
+      var version = keysharky.gsliteswf.getAPIVersion();
+    }catch(e){
+      
+      // If no gsliteswf object found, try to search Grooveshark
+      try{
+        
+        keysharky.findGrooveshark();
+        var version = keysharky.gsliteswf.getAPIVersion();
+        
+      }catch(e){}
+      
+    }
+    
+    if (version){
+    
+      response.setStatusLine("1.1", 200, "OK");
+      response.write(version);
+      
+    }else{
+    
+      response.setStatusLine("1.1", 500, "FAILED");
+      response.write("COULDN'T RETRIEVE GROOVESHARK API VERSION");
+      
+    }
+  },
+  
+  // Retrieves info about Grooveshark version
   serverGroovesharkVersion: function(request, response){
 
     try {
@@ -204,7 +234,7 @@ var keysharky = {
       <h2>Hi there!</h2>
       
       <p style="font-family: courier, monospace;">
-        It's sad to tell you this, but your requested method doesn't exicst in API (yet?). 
+        I'm sad to tell you this, but your requested method doesn't exicst in API (yet?). 
         If you are lost, it's possible to find some help by visiting 
         <a href="http://wiki.github.com/intarstudents/keySharky/api-server">API server</a> documentation page.
       </p>
