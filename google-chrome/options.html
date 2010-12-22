@@ -84,6 +84,9 @@
             "voteup"    : '{"modifiers":["control","alt"],"keycode":65}',
             "votedown"  : '{"modifiers":["control","alt"],"keycode":90}',
             "voteclear" : '{"modifiers":["control","alt"],"keycode":81}',
+            "mute"      : '{"modifiers":["control","shift"],"keycode":77}',
+            "volup"     : '{"modifiers":["control","shift"],"keycode":190}',
+            "voldown"   : '{"modifiers":["control","shift"],"keycode":188}'
           };
           
           this.uiOptions();
@@ -382,6 +385,24 @@
       <span class="label">Reset vote</span> 
       <input id="voteclear" class="combos-input" type="text" value="-"readonly="true" 
       onkeydown="keysharkyOptions.applyCombo(event, 'voteclear')" />
+      
+      <div class="clear heading">Sound control</div>
+      
+      <span class="label">Mute</span> 
+      <input id="mute" class="combos-input" type="text" value="-"readonly="true" 
+      onkeydown="keysharkyOptions.applyCombo(event, 'mute')" />
+      
+      <div class="clear"></div>
+      
+      <span class="label">Volume Up</span> 
+      <input id="volup" class="combos-input" type="text" value="-"readonly="true" 
+      onkeydown="keysharkyOptions.applyCombo(event, 'volup')" />
+      
+      <div class="clear"></div>
+      
+      <span class="label">Volume Down</span> 
+      <input id="voldown" class="combos-input" type="text" value="-"readonly="true" 
+      onkeydown="keysharkyOptions.applyCombo(event, 'voldown')" />
       
       <div class="clear"></div>
       

@@ -27,6 +27,10 @@ var keysharkyListener = {
           "voteup"    : function(){ keysharkyListener.Grooveshark("voteCurrentSong(1)"); },
           "votedown"  : function(){ keysharkyListener.Grooveshark("voteCurrentSong(-1)"); },
           "voteclear" : function(){ keysharkyListener.Grooveshark("voteCurrentSong(0)"); },
+          
+          "mute"      : function(){ keysharkyListener.Grooveshark("setIsMuted(Grooveshark.getIsMuted() ? false : true)"); },
+          "volup"     : function(){ keysharkyListener.Grooveshark("setVolume(Grooveshark.getVolume() + 10)"); },
+          "voldown"   : function(){ keysharkyListener.Grooveshark("setVolume(Grooveshark.getVolume() - 10)"); },
         };
         
         if (request.method == "Grooveshark" && allToggles[request.action] != undefined){
