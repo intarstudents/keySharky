@@ -8,5 +8,9 @@ pref('extensions.keysharky.voteup',     '{"modifiers":["control","alt"],"key":"A
 pref('extensions.keysharky.votedown',   '{"modifiers":["control","alt"],"key":"Z","keycode":"","enabled":true}');
 pref('extensions.keysharky.voteclear',  '{"modifiers":["control","alt"],"key":"Q","keycode":"","enabled":true}');
 
+pref('extensions.keysharky.mute',       '{"modifiers":["control","shift"],"key":"M","keycode":"","enabled":true}');
+pref('extensions.keysharky.volup',      '{"modifiers":["control","shift"],"key":">","keycode":"","enabled":true}');
+pref('extensions.keysharky.voldown',    '{"modifiers":["control","shift"],"key":"<","keycode":"","enabled":true}');
+
 pref('extensions.keysharky.server_port',        8800);
 pref('extensions.keysharky.server_autostart',   false);

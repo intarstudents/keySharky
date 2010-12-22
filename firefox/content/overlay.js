@@ -12,6 +12,10 @@ var keysharky = {
       "voteup"    : function(){ keysharky.gsliteswf.voteCurrentSong(1); },
       "votedown"  : function(){ keysharky.gsliteswf.voteCurrentSong(-1); },
       "voteclear" : function(){ keysharky.gsliteswf.voteCurrentSong(0); },
+      
+      "mute"      : function(){ keysharky.gsliteswf.setIsMuted(keysharky.gsliteswf.getIsMuted() ? false : true); },
+      "volup"     : function(){ keysharky.gsliteswf.setVolume(keysharky.gsliteswf.getVolume() + 10); },
+      "voldown"   : function(){ keysharky.gsliteswf.setVolume(keysharky.gsliteswf.getVolume() - 10); }
     };
     
     this.defaults = {
@@ -25,6 +29,10 @@ var keysharky = {
       "votedown"    :  '{"modifiers":["control","alt"],"key":"Z","keycode":"","enabled":true}',
       "voteclear"   :  '{"modifiers":["control","alt"],"key":"Q","keycode":"","enabled":true}',
       
+      "mute"        :  '{"modifiers":["control","shift"],"key":"M","keycode":"","enabled":true}',
+      "volup"       :  '{"modifiers":["control","shift"],"key":">","keycode":"","enabled":true}',
+      "voldown"     :  '{"modifiers":["control","shift"],"key":"<","keycode":"","enabled":true}',
+      
       "server_port" : 8800
     }
     
@@ -32,6 +40,9 @@ var keysharky = {
       "currentSong"   : function(){ return keysharky.gsliteswf.getCurrentSongStatus(); },
       "nextSong"      : function(){ return keysharky.gsliteswf.getNextSong(); },
       "previousSong"  : function(){ return keysharky.gsliteswf.getPreviousSong(); },
+      
+      "volume"        : function(){ return keysharky.gsliteswf.getVolume(); },
+      "muted"         : function(){ return keysharky.gsliteswf.getIsMuted(); },
     };
     
     this.consoleObject = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
@@ -70,11 +81,13 @@ var keysharky = {
       
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
+      
       this.gsAPI.registerPathHandler("/gs-version", this.serverGroovesharkVersion);
       this.gsAPI.registerPathHandler("/gs-api-version", this.serverGroovesharkAPIVersion);
+      this.gsAPI.registerPathHandler("/setVolume", this.serverVolumeControl);
       
       for (var method in this.serverMethods){
-        this.gsAPI.registerPathHandler("/" + method, this.serverSong);
+        this.gsAPI.registerPathHandler("/" + method, this.serverInfo);
       }
       
       for(var toggle in this.allToggles){
@@ -102,6 +115,45 @@ var keysharky = {
     this.log("gsAPI server stopped");
     
     return true;
+  },
+  
+  serverVolumeControl: function(request, response){
+    
+    var volume = /^(\d+)$/i.exec(request.queryString);
+    var toggled = false;
+    
+    if (volume != null && volume[1] >= 0 && volume[1] <= 100){
+      
+      try {
+        keysharky.gsliteswf.setVolume(volume[1]);
+        toggled = true;
+      }catch(e){
+        
+        try{
+          keysharky.findGrooveshark();
+          
+          keysharky.gsliteswf.setVolume(volume[1]);
+          toggled = true;
+        }catch(e){}
+        
+      }
+      
+      if (toggled){
+        
+        response.setStatusLine("1.1", 200, "OK");
+        response.write("VOLUME SET TO " + volume[1]);
+        
+      }else{
+        
+        response.setStatusLine("1.1", 500, "FAILED");
+        response.write("COULDN'T SET VOLUME");
+      
+      }
+    }else{
+      response.setStatusLine("1.1", 500, "FAILED");
+      response.write("BAD VOLUME VALUE. MUST BE BETWEEN 0 AND 100.");
+    }
+    
   },
   
   // Retrieves info about GroovesharkAPI version
@@ -178,8 +230,8 @@ var keysharky = {
     }
   },
   
-  // Shows previous/current/next song status in plain text
-  serverSong: function(request, response){
+  // Retrieves and shows status messages
+  serverInfo: function(request, response){
     var method = /\/(\w+)/i.exec(request.path);
     var jsonArr = {};
     
@@ -197,7 +249,7 @@ var keysharky = {
     
     response.setHeader("Cache-Control", "no-cache", false);
     
-    if (json){
+    if (typeof(json) != "undefined"){
       response.setStatusLine("1.1", 200, "OK");
       
       if (method[1] == "currentSong"){
@@ -205,9 +257,13 @@ var keysharky = {
         response.write("status: " + json.status + "\n");
         jsonArr = json.song;
         
-      }else{
+      }else if (method[1] == "nextSong" || method[1] == "previousSong"){
       
         jsonArr = json;
+        
+      }else{
+      
+        jsonArr[method[1]] = json;
         
       }
       
@@ -216,7 +272,7 @@ var keysharky = {
       }
     }else{
       response.setStatusLine("1.1", 500, "FAILED");
-      response.write("COULDN'T RETRIEVE SONG STATUS");
+      response.write("COULDN'T RETRIEVE '" + method[1] + "' STATUS");
     }
     
   },
@@ -463,7 +519,6 @@ var keysharky = {
     for(var toggle in this.allToggles){
       id_arr[i]   = toggle;
       json_arr[i] = this.getPref(toggle);
-      
       i++;
     }
     
@@ -492,6 +547,7 @@ var keysharky = {
     
       this.optionsDoc.getElementById("keysharky-group-playback").style.display = "none";
       this.optionsDoc.getElementById("keysharky-group-current").style.display = "none";
+      this.optionsDoc.getElementById("keysharky-group-sound").style.display = "none";
       this.optionsDoc.getElementById("keysharky-group-readme").style.display = "none";
       
     }
@@ -728,7 +784,6 @@ var keysharky = {
 	      }
 	      
 	    }catch(e){
-	      this.log(e);
 	      this.setPref(id, this.JSON.parse(this.defaults[id]));
 	    }
 	    

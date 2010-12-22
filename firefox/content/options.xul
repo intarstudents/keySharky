@@ -47,6 +47,7 @@
         <textbox id="keysharky-toggle-next-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'next')" readonly="true" />
       </hbox>
+      
     </groupbox>
     
     <groupbox id="keysharky-group-current">
@@ -78,6 +79,31 @@
         <spacer flex="1"/>
         <textbox id="keysharky-toggle-voteclear-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'voteclear')" readonly="true" />
+      </hbox>
+    </groupbox>
+    
+    <groupbox id="keysharky-group-sound">
+      <caption label="Sound control"/>
+      
+      <hbox align="center">
+        <checkbox onclick="keysharky.toggleCombo('mute');" id="keysharky-enabler-mute" class="enabler" label="Mute" />
+        <spacer flex="1"/>
+        <textbox id="keysharky-toggle-mute-shortcut" value="-"
+                 onkeypress="keysharky.applyCombo(event, 'mute')" readonly="true" />
+      </hbox>
+      
+      <hbox align="center">
+        <checkbox onclick="keysharky.toggleCombo('volup');" id="keysharky-enabler-volup" class="enabler" label="Volume Up" />
+        <spacer flex="1"/>
+        <textbox id="keysharky-toggle-volup-shortcut" value="-"
+                 onkeypress="keysharky.applyCombo(event, 'volup')" readonly="true" />
+      </hbox>
+      
+      <hbox align="center">
+        <checkbox onclick="keysharky.toggleCombo('voldown');" id="keysharky-enabler-voldown" class="enabler" label="Volume Down" />
+        <spacer flex="1"/>
+        <textbox id="keysharky-toggle-voldown-shortcut" value="-"
+                 onkeypress="keysharky.applyCombo(event, 'voldown')" readonly="true" />
       </hbox>
     </groupbox>
     

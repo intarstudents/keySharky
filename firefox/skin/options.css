@@ -21,6 +21,9 @@
 #keysharky-toggle-favorite-shortcut,
 #keysharky-toggle-voteup-shortcut,
 #keysharky-toggle-voteclear-shortcut,
-#keysharky-toggle-votedown-shortcut {
+#keysharky-toggle-votedown-shortcut,
+#keysharky-toggle-mute-shortcut,
+#keysharky-toggle-volup-shortcut,
+#keysharky-toggle-voldown-shortcut {
   width: 250px;
 }
