@@ -5,20 +5,20 @@
       // Init keysharky object
       init: function(){
         keysharky.groovesharkTabID = null;
-        keysharky.debug = true;
+        keysharky.debug = false;
         
         keysharky.defaults = {
-          "play"      : '{"modifiers":["control","alt","shift"],"keycode":90}',
-          "stop"      : '{"modifiers":["control","alt","shift"],"keycode":88}',
-          "prev"      : '{"modifiers":["control","alt","shift"],"keycode":65}',
-          "next"      : '{"modifiers":["control","alt","shift"],"keycode":68}',
-          "favorite"  : '{"modifiers":["control","alt"],"keycode":83}',
-          "voteup"    : '{"modifiers":["control","alt"],"keycode":65}',
-          "votedown"  : '{"modifiers":["control","alt"],"keycode":90}',
-          "voteclear" : '{"modifiers":["control","alt"],"keycode":81}',
-          "mute"      : '{"modifiers":["control","shift"],"keycode":77}',
-          "volup"     : '{"modifiers":["control","shift"],"keycode":190}',
-          "voldown"   : '{"modifiers":["control","shift"],"keycode":188}'
+          "play"      : '{"modifiers":["control","alt","shift"],"keycode":90,"enabled":true}',
+          "stop"      : '{"modifiers":["control","alt","shift"],"keycode":88,"enabled":true}',
+          "prev"      : '{"modifiers":["control","alt","shift"],"keycode":65,"enabled":true}',
+          "next"      : '{"modifiers":["control","alt","shift"],"keycode":68,"enabled":true}',
+          "favorite"  : '{"modifiers":["control","alt"],"keycode":83,"enabled":true}',
+          "voteup"    : '{"modifiers":["control","alt"],"keycode":65,"enabled":true}',
+          "votedown"  : '{"modifiers":["control","alt"],"keycode":90,"enabled":true}',
+          "voteclear" : '{"modifiers":["control","alt"],"keycode":81,"enabled":true}',
+          "mute"      : '{"modifiers":["control","shift"],"keycode":77,"enabled":true}',
+          "volup"     : '{"modifiers":["control","shift"],"keycode":190,"enabled":true}',
+          "voldown"   : '{"modifiers":["control","shift"],"keycode":188,"enabled":true}'
         };
         
         safari.application.addEventListener("command", function(event) {
@@ -53,6 +53,14 @@
               for(var toggle in localStorage){
                 dismatch = false;
                 t = JSON.parse(localStorage[toggle]);
+                
+                if (typeof(t["enabled"]) == "undefined"){
+                  t["enabled"] = true;
+                  localStorage[toggle] = JSON.stringify(t);
+                }
+                
+                if (!t["enabled"])
+                  continue;
                 
                 if (t["modifiers"].length != request["modifiers"].length)
                   continue;
