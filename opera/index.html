@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+    var keysharky = {
+      init: function(){
+        
+        keysharky.debug = false;
+        keysharky.defaults = {
+          "play"      : '{"modifiers":["control","alt","shift"],"keycode":90,"enabled":true}',
+          "stop"      : '{"modifiers":["control","alt","shift"],"keycode":88,"enabled":true}',
+          "prev"      : '{"modifiers":["control","alt","shift"],"keycode":65,"enabled":true}',
+          "next"      : '{"modifiers":["control","alt","shift"],"keycode":68,"enabled":true}',
+          "favorite"  : '{"modifiers":["control","alt"],"keycode":83,"enabled":true}',
+          "voteup"    : '{"modifiers":["control","alt"],"keycode":65,"enabled":true}',
+          "votedown"  : '{"modifiers":["control","alt"],"keycode":90,"enabled":true}',
+          "voteclear" : '{"modifiers":["control","alt"],"keycode":81,"enabled":true}',
+          "mute"      : '{"modifiers":["control","shift"],"keycode":77,"enabled":true}',
+          "volup"     : '{"modifiers":["control","shift"],"keycode":190,"enabled":true}',
+          "voldown"   : '{"modifiers":["control","shift"],"keycode":188,"enabled":true}'
+        };
+        
+        opera.extension.onmessage = function(event){
+          
+          if (event.data["method"] == "keyup"){
+          
+            for(var toggle in keysharky.defaults){
+              if (!localStorage[toggle]){
+                localStorage[toggle] = keysharky.defaults[toggle];
+                keysharky.log("Reseting '" + toggle + "' preference");
+              }
+            }
+            
+            // Fix for easier porting from Chrome
+            var request = event.data;
+            
+            var t = null;
+            var dismatch = null;
+            var action = null;
+            
+            // Is this combo valid? 
+            try{
+              
+              for(var toggle in keysharky.defaults){
+                dismatch = false;
+                t = JSON.parse(localStorage[toggle]);
+                
+                if (typeof(t["enabled"]) == "undefined"){
+                  t["enabled"] = true;
+                  localStorage[toggle] = JSON.stringify(t);
+                }
+                
+                if (!t["enabled"])
+                  continue;
+                
+                if (t["modifiers"].length != request["modifiers"].length)
+                  continue;
+                
+                for(var i in t["modifiers"]){
+                  if (t["modifiers"][i] != request["modifiers"][i]){
+                    dismatch = true;
+                    break;
+                  }
+                }
+                
+                if (dismatch)
+                  continue;
+                  
+                if (t["keycode"] != request["keycode"])
+                  continue;
+                
+                action = toggle;
+              }
+              
+            }catch(e){}
+            
+            if (action){
+              keysharky.log(action);
+              keysharky.toggle(action);
+            }
+          }
+        }
+      },
+      
+      // Send toggle to Grooveshark
+      toggle: function(action){
+        opera.extension.broadcastMessage({
+          "method" : "Grooveshark",
+          "action" : action
+        });
+      },
+      
+      // Debugging is half of victory!
+      log: function(msg){
+        if (keysharky.debug && msg){
+          window.opera.postError("keysharky ---> " + msg);
+        }
+      }
+    };
+    
+    window.addEventListener("load", function(e){ keysharky.init(e); } , false);
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
