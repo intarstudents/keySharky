@@ -1,6 +1,6 @@
 {
   "name": "keySharky",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Add missing keyboard functionality to Grooveshark!",
   "background_page": "keysharky.html",
   "options_page": "options.html",
