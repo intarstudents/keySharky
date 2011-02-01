@@ -8,6 +8,9 @@
         keysharky.groovesharkTabID = null;
         keysharky.debug = true;
         
+        if (!localStorage["ws"])
+          localStorage["ws"] = "ws://";
+        
         localStorage["ws-open"] = false;
         
         keysharky.defaults = {
@@ -23,9 +26,10 @@
           "volup"     : '{"modifiers":["control","shift"],"keycode":190,"enabled":true}',
           "voldown"   : '{"modifiers":["control","shift"],"keycode":188,"enabled":true}'
         };
-        
+
         // Wait for keyup in another tab and then toggle gsliteswf object in Grooveshark flash player page.
         chrome.extension.onRequest.addListener(function(request, sender, sendResponse){
+          
           if (request.method == "keyup"){
             
             // Check localStorage for missing link
@@ -78,7 +82,6 @@
             
             // Yup, it is, so continue toggling
             if (action){
-              
               keysharky.log("Toggling '" + action + "' ...");
               
               if (keysharky.groovesharkTabID == null){
@@ -91,11 +94,12 @@
                 keysharky.toggle(action);
                 
               }
-              
-                
-              
             }
             
+          }else if (request.method == "socketConnect"){
+            keysharky.socketConnect();
+          }else if (request.method == "socketDisconnect"){
+            keysharky.socketDisconnect();
           }
           
           sendResponse({});
@@ -108,7 +112,9 @@
             keysharky.groovesharkTabID = null;
           }
         });
-
+        
+        if (localStorage["ws-startup"] == "true")
+          keysharky.socketConnect();
         
       },
       
@@ -137,21 +143,24 @@
       socketConnect: function(){
         
         keysharky.socketCloseForced = true;
-         
+        
+        // Before opening new socket, close connected socket
         try{ keysharky.socket.close(); }catch(e){ keysharky.socketCloseForced = false; };
         
-        if (!localStorage["ws"]){
-          keysharky.log("Couldn't find server address");
-          return;
+        try{
+          keysharky.socket = new WebSocket(localStorage["ws"]);
+        }catch(e){
+          // Fail with dignity
+          localStorage["ws-open"] = false;
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){});
         }
-        
-        keysharky.socket = new WebSocket(localStorage["ws"] ? localStorage["ws"] : "ws://");
         
         keysharky.socket.onopen = function(){
           keysharky.socketCloseForced = false;
           localStorage["ws-open"] = true;
           
-          keysharky.log("socket opened (" + localStorage["ws"] + ")");
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){});
+          keysharky.log("Socket opened (" + localStorage["ws"] + ")");
         }
         
         keysharky.socket.onmessage = function(msg){
@@ -174,10 +183,19 @@
             keysharky.socketConnect();
           }else{
             localStorage["ws-open"] = false;
-            keysharky.log("socket closed");
+            keysharky.log("Socket closed");
           }
+          
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){})
         }
         
+      },
+      
+      socketDisconnect: function(){
+        keysharky.log("Closing socket ...");
+        
+        keysharky.socketCloseForced = true;
+        try{ keysharky.socket.close(); }catch(e){ };
       },
       
       // Debugging is half of victory!
