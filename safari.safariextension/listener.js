@@ -12,7 +12,7 @@ var keysharkyListener = {
   
 	init: function(){
     
-    if (window.location.href.search(/^http\:\/\/(listen|preview|staging|retro)\.grooveshark\.com/) != -1){
+    if (window.location.href.search(/^http\:\/\/((listen|preview|staging|retro)\.|)grooveshark\.com/) != -1){
       safari.self.addEventListener("message", function(request){
       
         var allToggles = {
