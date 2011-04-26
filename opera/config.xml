@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="http://keysharky.tldr.lv/" version="1.5.3">
-  
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://keysharky.tldr.lv/" version="1.5.5">
+
 	<name>keySharky</name>
 	<description>Add missing keyboard functionality to Grooveshark!</description>
 	<access origin="http://grooveshark.com" subdomains="true"/>
 	<icon src="keysharky.png"/>
-	
+
 	<author href="http://intarstudents.lv/" email="the.mobix@gmail.com">Intars Students</author>
 	<license href="http://www.opensource.org/licenses/mit-license.php">Licensed under the MIT license</license>
-	
+
 </widget>
