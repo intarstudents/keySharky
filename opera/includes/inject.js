@@ -1,3 +1,11 @@
+// ==UserScript==
+// @name           keySharky Listener
+// @namespace      http://keysharky.tldr.lv
+// @description    Injects keySharky listener in every tab, so it could handle keyboard action
+//                 and talk to Groovesharks player.
+// @include        *
+// ==/UserScript==
+
 var keysharkyListener = {
 
   Grooveshark: function(toggle)
@@ -12,7 +20,7 @@ var keysharkyListener = {
 
   init: function(){
 
-    if (window.location.href.search(/^http\:\/\/((listen|preview|staging|retro)\.|)grooveshark\.com/) != -1 && window.location.href.search(/pixels\.php/) == -1){
+    if (window.location.href.search(/^http\:\/\/((listen|preview|staging|retro)\.|)grooveshark\.com\/(#\/|$)/) != -1){
       window.addEventListener('load', function(event) {
 
         opera.extension.onmessage = function(event) {

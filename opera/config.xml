@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<widget xmlns="http://www.w3.org/ns/widgets" id="http://keysharky.tldr.lv/" version="1.5.5">
+<widget xmlns="http://www.w3.org/ns/widgets" id="http://keysharky.tldr.lv/" version="1.5.7">
 
 	<name>keySharky</name>
 	<description>Add missing keyboard functionality to Grooveshark!</description>
