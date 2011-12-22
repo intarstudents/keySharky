@@ -6,7 +6,15 @@
       init: function(){
 
         keysharky.groovesharkTabID = null;
-        keysharky.debug = false;
+        keysharky.debug = true;
+
+        if (!localStorage["ws"])
+          localStorage["ws"] = "ws://";
+        
+        localStorage["ws-open"] = false;
+
+        if (localStorage["ws-startup"])
+          keysharky.socketConnect();
 
         keysharky.defaults = {
           "play"      : '{"modifiers":["control","alt","shift"],"keycode":90,"enabled":true}',
@@ -44,8 +52,9 @@
               for(var toggle in localStorage){
                 dismatch = false;
                 t = JSON.parse(localStorage[toggle]);
-                keysharky.log(typeof(t["enabled"]));
-
+                // keysharky.log("TYPEOF");
+                // keysharky.log(typeof(t["enabled"]));
+                // keysharky.log(t);
                 if (typeof(t["enabled"]) == "undefined"){
                   t["enabled"] = true;
                   localStorage[toggle] = JSON.stringify(t);
@@ -81,36 +90,17 @@
               keysharky.log("Toggling '" + action + "' ...");
 
               if (keysharky.groovesharkTabID != null){
-
                 keysharky.toggle(action);
-
               }else{
-
-                keysharky.log("Searching for Grooveshark ...");
-
-                chrome.windows.getCurrent(function(currentWindow){
-                  chrome.tabs.getAllInWindow(currentWindow.id, function(tabs){
-                    for (var i=0; i<tabs.length; i++){
-
-                      if (tabs[i].url.search(/^http\:\/\/((listen|preview|staging|retro)\.|)grooveshark\.com/) != -1){
-                        keysharky.groovesharkTabID = tabs[i].id;
-                        keysharky.log("The groove is found!");
-
-                        keysharky.toggle(action);
-                        break;
-                      }
-                    }
-
-                    if (keysharky.groovesharkTabID == null){
-                      keysharky.log("Where is groove?!");
-                    }
-                  });
-                });
-
+                keysharky.searchGrooveshark(action);
               }
 
             }
 
+          }else if (request.method == "socketConnect"){
+            keysharky.socketConnect();
+          }else if (request.method == "socketDisconnect"){
+            keysharky.socketDisconnect();
           }
 
           sendResponse({});
@@ -124,6 +114,87 @@
           }
         });
 
+      },
+
+      searchGrooveshark: function(action){
+        keysharky.log("Searching for Grooveshark ...");
+
+        chrome.windows.getCurrent(function(currentWindow){
+          chrome.tabs.getAllInWindow(currentWindow.id, function(tabs){
+            for (var i=0; i<tabs.length; i++){
+
+              if (tabs[i].url.search(/^http\:\/\/((listen|preview|staging|retro)\.|)grooveshark\.com/) != -1){
+                keysharky.groovesharkTabID = tabs[i].id;
+                keysharky.log("The groove is found!");
+
+                keysharky.toggle(action);
+                break;
+              }
+            }
+
+            if (keysharky.groovesharkTabID == null){
+              keysharky.log("Where is groove?!");
+            }
+          });
+        });
+      },
+
+      socketConnect: function(){
+        
+        keysharky.socketCloseForced = true;
+        
+        // Before opening new socket, close connected socket
+        try{ keysharky.socket.close(); }catch(e){ keysharky.socketCloseForced = false; };
+        
+        try{
+          keysharky.socket = new WebSocket(localStorage["ws"]);
+        }catch(e){
+          // Fail with dignity
+          localStorage["ws-open"] = false;
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){});
+        }
+        
+        keysharky.socket.onopen = function(){
+          keysharky.socketCloseForced = false;
+          localStorage["ws-open"] = true;
+          
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){});
+          keysharky.log("Socket opened (" + localStorage["ws"] + ")");
+        }
+        
+        keysharky.socket.onmessage = function(msg){
+          if (keysharky.defaults[msg.data]){
+            if (keysharky.groovesharkTabID == null){
+            
+              keysharky.log("Searching for Grooveshark ...");
+              keysharky.searchGrooveshark(msg.data);
+              
+            }else{
+              
+              keysharky.toggle(msg.data);
+              
+            }
+          }
+        }
+        
+        keysharky.socket.onclose = function(e){
+          if (!keysharky.socketCloseForced){
+            keysharky.socketConnect();
+          }else{
+            localStorage["ws-open"] = false;
+            keysharky.log("Socket closed");
+          }
+          
+          chrome.extension.sendRequest({"method": "toggleButton"}, function(response){})
+        }
+        
+      },
+      
+      socketDisconnect: function(){
+        keysharky.log("Closing socket ...");
+        
+        keysharky.socketCloseForced = true;
+        try{ keysharky.socket.close(); }catch(e){ };
       },
 
       // Debugging is half of victory!
