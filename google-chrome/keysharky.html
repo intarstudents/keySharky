@@ -52,9 +52,7 @@
               for(var toggle in localStorage){
                 dismatch = false;
                 t = JSON.parse(localStorage[toggle]);
-                // keysharky.log("TYPEOF");
-                // keysharky.log(typeof(t["enabled"]));
-                // keysharky.log(t);
+                
                 if (typeof(t["enabled"]) == "undefined"){
                   t["enabled"] = true;
                   localStorage[toggle] = JSON.stringify(t);
