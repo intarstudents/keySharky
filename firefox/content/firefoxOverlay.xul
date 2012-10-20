@@ -15,6 +15,7 @@
     <command id="keysharky_cmd_next"      oncommand="keysharky.toggle('next');" />
 
     <command id="keysharky_cmd_favorite"  oncommand="keysharky.toggle('favorite');" />
+    <command id="keysharky_cmd_remove"    oncommand="keysharky.toggle('remove');" />
     <command id="keysharky_cmd_voteup"    oncommand="keysharky.toggle('voteup');" />
     <command id="keysharky_cmd_voteclear" oncommand="keysharky.toggle('voteclear');" />
     <command id="keysharky_cmd_votedown"  oncommand="keysharky.toggle('votedown');" />

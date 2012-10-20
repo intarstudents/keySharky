@@ -4,6 +4,7 @@ pref('extensions.keysharky.previous',   '{"modifiers":["control","alt","shift"],
 pref('extensions.keysharky.next',       '{"modifiers":["control","alt","shift"],"key":"D","keycode":"","enabled":true}');
 
 pref('extensions.keysharky.favorite',   '{"modifiers":["control","alt"],"key":"S","keycode":"","enabled":true}');
+pref('extensions.keysharky.remove',     '{"modifiers":["control","alt"],"key":"R","keycode":"","enabled":true}');
 pref('extensions.keysharky.voteup',     '{"modifiers":["control","alt"],"key":"A","keycode":"","enabled":true}');
 pref('extensions.keysharky.votedown',   '{"modifiers":["control","alt"],"key":"Z","keycode":"","enabled":true}');
 pref('extensions.keysharky.voteclear',  '{"modifiers":["control","alt"],"key":"Q","keycode":"","enabled":true}');

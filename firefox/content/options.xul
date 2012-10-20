@@ -59,6 +59,13 @@
         <textbox id="keysharky-toggle-favorite-shortcut" value="-"
                  onkeypress="keysharky.applyCombo(event, 'favorite')" readonly="true" />
       </hbox>
+
+      <hbox align="center">
+        <checkbox onclick="keysharky.toggleCombo('remove');" id="keysharky-enabler-remove" class="enabler" label="Remove" />
+        <spacer flex="1"/>
+        <textbox id="keysharky-toggle-remove-shortcut" value="-"
+                 onkeypress="keysharky.applyCombo(event, 'remove')" readonly="true" />
+      </hbox>
       
       <hbox align="center">
         <checkbox onclick="keysharky.toggleCombo('voteup');" id="keysharky-enabler-voteup" class="enabler" label="Vote up :)" />
