@@ -15,3 +15,4 @@ pref('extensions.keysharky.voldown',    '{"modifiers":["control","shift"],"key":
 
 pref('extensions.keysharky.server_port',        8800);
 pref('extensions.keysharky.server_autostart',   false);
+pref('extensions.keysharky.server_host',				'localhost');

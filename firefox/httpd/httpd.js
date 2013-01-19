@@ -497,9 +497,9 @@ nsHttpServer.prototype =
   //
   // see nsIHttpServer.start
   //
-  start: function(port)
+  start: function(port, host)
   {
-    this._start(port, "localhost")
+    this._start(port, host)
   },
 
   _start: function(port, host)
@@ -853,13 +853,13 @@ function ServerIdentity()
   this._primaryHost = "127.0.0.1"
 
   /** The port number of the primary location. */
-  this._primaryPort = -1;
+  this._primaryPort = 80;
 
   /**
    * The current port number for the corresponding server, stored so that a new
    * primary location can always be set if the current one is removed.
    */
-  this._defaultPort = -1;
+  this._defaultPort = 80;
 
   /**
    * Maps hosts to maps of ports to schemes, e.g. the following would represent

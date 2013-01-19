@@ -35,7 +35,8 @@ var keysharky = {
       "volup"       :  '{"modifiers":["control","shift"],"key":">","keycode":"","enabled":true}',
       "voldown"     :  '{"modifiers":["control","shift"],"key":"<","keycode":"","enabled":true}',
 
-      "server_port" : 8800
+      "server_port" : 8800,
+      "server_host" : "localhost"
     }
 
     this.serverMethods = {
@@ -53,7 +54,7 @@ var keysharky = {
     this.gsliteswf  = undefined;
     this.gsAPI      = undefined;
     this.gsTab      = null;
-    this.debug      = false;
+    this.debug      = true;
     this.readme_url = "http://www.mozilla.org/access/keyboard/";
 
     this.loadJSON();
@@ -77,9 +78,11 @@ var keysharky = {
   startServer: function(){
     try{
 
+      var host = this.get_server_host();
+      var port = this.get_server_port();
+
       this.gsAPI = Components.classes["@mozilla.org/server/jshttp;1"].
                   createInstance(Components.interfaces.nsIHttpServer);
-      var port = this.get_server_port();
 
       this.gsAPI.registerErrorHandler(404, this.serverErrorParser);
       this.gsAPI.registerPathHandler("/", this.serverErrorParser);
@@ -96,8 +99,8 @@ var keysharky = {
         this.gsAPI.registerPathHandler("/" + toggle, this.serverParser);
       }
 
-      this.gsAPI.start(port);
-      this.log("gsAPI server started (@ http://localhost:" + port + ")");
+      this.gsAPI.start(port, host);
+      this.log("gsAPI server started (@ http://" + host + ":" + port + ")");
 
       return true;
 
@@ -328,6 +331,18 @@ var keysharky = {
       return port;
     }else{
       return this.defaults["server_port"];
+    }
+  },
+
+  get_server_host: function(){
+  	var pref = Components.classes["@mozilla.org/preferences-service;1"]
+               .getService(Components.interfaces.nsIPrefBranch);
+    var host = pref.getCharPref("extensions.keysharky.server_host");
+
+    if (host != ""){
+    	return host;
+    }else{
+    	return this.defaults["server_host"];
     }
   },
 
