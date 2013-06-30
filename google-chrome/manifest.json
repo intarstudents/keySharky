@@ -1,6 +1,6 @@
 {
   "name": "keySharky",
-  "version": "1.6",
+  "version": "1.6.1",
   "description": "Add missing keyboard functionality to Grooveshark!",
   "background": {
     "scripts": ["keysharky.js"]
