@@ -15,8 +15,16 @@ var keysharky = {
       "voteclear" : function(){ keysharky.gsliteswf.voteCurrentSong(0); },
 
       "mute"      : function(){ keysharky.gsliteswf.setIsMuted(keysharky.gsliteswf.getIsMuted() ? false : true); },
-      "volup"     : function(){ keysharky.gsliteswf.setVolume(keysharky.gsliteswf.getVolume() + 10); },
-      "voldown"   : function(){ keysharky.gsliteswf.setVolume(keysharky.gsliteswf.getVolume() - 10); }
+      "volup"     : function(){
+        var _vol = keysharky.gsliteswf.getVolume() + 10;
+        if (_vol > 100){ _vol = 100; }
+        keysharky.gsliteswf.setVolume(_vol);
+      },
+      "voldown"   : function(){
+        var _vol = keysharky.gsliteswf.getVolume() - 10;
+        if (_vol < 0){ _vol = 0; }
+        keysharky.gsliteswf.setVolume(_vol);
+      }
     };
 
     this.defaults = {
